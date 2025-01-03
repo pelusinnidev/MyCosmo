@@ -2,10 +2,10 @@ import SwiftUI
 
 struct ObservationsView: View {
     var body: some View {
-        Text("SettingsView")
+        Text("ObservationsView")
     }
 }
 
 #Preview {
-    SettingsView()
+    ObservationsView()
 }
