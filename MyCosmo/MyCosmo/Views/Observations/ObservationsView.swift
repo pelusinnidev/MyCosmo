@@ -2,7 +2,12 @@ import SwiftUI
 
 struct ObservationsView: View {
     var body: some View {
-        Text("ObservationsView")
+        NavigationStack {
+            VStack {
+                Text("ObservationsView")
+            }
+            .navigationTitle("Observations")
+        }
     }
 }
 

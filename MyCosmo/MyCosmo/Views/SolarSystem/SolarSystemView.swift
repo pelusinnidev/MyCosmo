@@ -8,36 +8,62 @@ struct SolarSystemView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                if let apodData = apodData {
-                    AsyncImage(url: URL(string: apodData.url)) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .onTapGesture {
-                                    showingDetail = true
+            ScrollView {
+                VStack {
+                    if let apodData = apodData {
+                        HStack(spacing: 16) {
+                            AsyncImage(url: URL(string: apodData.url)) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 120, height: 140)
+                                        .clipped()
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                        .padding()
+                                        .onTapGesture {
+                                            showingDetail = true
+                                        }
+                                case .failure:
+                                    Image(systemName: "photo")
+                                @unknown default:
+                                    EmptyView()
                                 }
-                        case .failure:
-                            Image(systemName: "photo")
-                        @unknown default:
-                            EmptyView()
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Spacer()
+                                Text(apodData.title)
+                                    .font(.title3)
+                                    .bold()
+                                    .lineLimit(2)
+                                Text(apodData.date)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Text("Source: NASA")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
+                        .padding(.horizontal, 16)
+                        .frame(width: 360, height: 160)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color(.systemBackground))
+                                .shadow(radius: 5)
+                        )
+                        .padding(.horizontal)
+                        
+                    } else if isLoading {
+                        ProgressView()
+                    } else if error != nil {
+                        Text("Error loading APOD")
                     }
-                    .frame(height: 300)
-                    
-                    Text(apodData.title)
-                        .font(.headline)
-                    Text(apodData.date)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                } else if isLoading {
-                    ProgressView()
-                } else if error != nil {
-                    Text("Error loading APOD")
                 }
             }
             .navigationTitle("Solar System")

@@ -2,7 +2,12 @@ import SwiftUI
 
 struct EventsView: View {
     var body: some View {
-        Text("EventsView")
+        NavigationStack {
+            VStack {
+                Text("EventsView")
+            }
+            .navigationTitle("Events")
+        }
     }
 }
 
