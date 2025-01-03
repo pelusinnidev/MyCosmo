@@ -50,14 +50,13 @@ struct SolarSystemView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .padding(.horizontal, 16)
                         .frame(width: 360, height: 160)
                         .background(
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(Color(.systemBackground))
                                 .shadow(radius: 5)
                         )
-                        .padding(.horizontal)
+                        .padding()
                         
                     } else if isLoading {
                         ProgressView()
