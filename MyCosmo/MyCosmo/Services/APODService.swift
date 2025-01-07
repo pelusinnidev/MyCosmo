@@ -1,7 +1,7 @@
 import Foundation
 
-class NASAService {
-    static let shared = NASAService()
+class APODService {
+    static let shared = APODService()
     private let apiKey = "RXXCVNTM6S015sjlavyOOi6YjJhK8aIS4s4FEn8n" // Pol's API Key
     
     func fetchAPOD() async throws -> APODResponse {
