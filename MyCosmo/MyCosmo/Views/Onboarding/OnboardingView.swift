@@ -8,11 +8,8 @@ struct OnboardingView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                LinearGradient(
-                    colors: [.black, Color("1A1A1A")],
-                    startPoint: .top,
-                    endPoint: .bottom
-                ).ignoresSafeArea()
+                Color(.systemBackground)
+                    .ignoresSafeArea()
                 
                 switch currentPage {
                 case .welcome:
@@ -38,6 +35,5 @@ struct OnboardingView: View {
                 }
             }
         }
-        .preferredColorScheme(.dark)
     }
 } 

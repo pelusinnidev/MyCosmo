@@ -12,20 +12,20 @@ struct WelcomeView: View {
             // App Icon
             Image("AppIconResource")
                 .resizable()
-                .frame(width: 180, height: 180)
+                .frame(width: 200, height: 200)
                 .clipShape(RoundedRectangle(cornerRadius: 45))
                 .shadow(color: .purple.opacity(0.3), radius: 20, x: 0, y: 10)
             
             VStack(spacing: 12) {
                 Text("MyCosmo")
                     .font(.system(size: 44, weight: .bold))
-                    .foregroundStyle(.linearGradient(colors: [.white, .white.opacity(0.7)], startPoint: .top, endPoint: .bottom))
+                    .foregroundStyle(.primary)
                 
                 Text("Be your Universe")
                     .font(.title3)
                     .foregroundStyle(.secondary)
             }
-            .padding(.top, 32)
+            .padding(.top, 16)
             
             // Tab icons
             HStack(spacing: 20) {
@@ -37,7 +37,7 @@ struct WelcomeView: View {
                 ], id: \.self) { iconName in
                     Image(systemName: iconName)
                         .font(.title2)
-                        .foregroundStyle(.white.opacity(0.7))
+                        .foregroundStyle(.purple)
                         .symbolEffect(.pulse)
                 }
             }

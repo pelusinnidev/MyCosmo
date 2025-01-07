@@ -52,12 +52,12 @@ struct FeaturesView: View {
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .multilineTextAlignment(.center)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color(.label))
                             
                             Text(item.description)
                                 .font(.body)
                                 .multilineTextAlignment(.center)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color(.secondaryLabel))
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         .padding(.horizontal, 32)

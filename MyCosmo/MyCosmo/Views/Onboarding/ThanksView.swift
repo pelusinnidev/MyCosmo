@@ -25,6 +25,7 @@ struct ThanksView: View {
                 Text("Welcome to MyCosmo!")
                     .font(.title)
                     .bold()
+                    .foregroundStyle(.primary)
                 
                 Text("We hope you enjoy your cosmic journey")
                     .font(.title3)
