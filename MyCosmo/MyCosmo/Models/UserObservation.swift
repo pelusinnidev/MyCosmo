@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 final class UserObservation {
@@ -10,6 +11,7 @@ final class UserObservation {
     var category: ObservationCategory
     var importance: ImportanceLevel
     var date: Date
+    var customImage: Data?  // Para guardar la imagen personalizada
     
     var displayPlanet: String {
         if selectedPlanet == .other {
@@ -18,7 +20,15 @@ final class UserObservation {
         return selectedPlanet.rawValue
     }
     
-    init(title: String, description: String, selectedPlanet: Planet, customPlanet: String? = nil, category: ObservationCategory, importance: ImportanceLevel, date: Date = Date()) {
+    var displayImage: Image {
+        if let imageData = customImage,
+           let uiImage = UIImage(data: imageData) {
+            return Image(uiImage: uiImage)
+        }
+        return selectedPlanet.defaultImage
+    }
+    
+    init(title: String, description: String, selectedPlanet: Planet, customPlanet: String? = nil, category: ObservationCategory, importance: ImportanceLevel, date: Date = Date(), customImage: Data? = nil) {
         self.title = title
         self.observationDescription = description
         self.selectedPlanet = selectedPlanet
@@ -26,6 +36,7 @@ final class UserObservation {
         self.category = category
         self.importance = importance
         self.date = date
+        self.customImage = customImage
     }
 }
 

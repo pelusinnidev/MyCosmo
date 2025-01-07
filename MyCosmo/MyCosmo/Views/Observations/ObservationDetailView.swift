@@ -5,54 +5,44 @@ struct ObservationDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                // Header
-                VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 20) {
+                observation.displayImage
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .shadow(radius: 5)
+                    .padding(.horizontal)
+                
+                VStack(alignment: .leading, spacing: 12) {
                     Text(observation.title)
                         .font(.title)
-                        .fontWeight(.bold)
+                        .bold()
                     
                     HStack {
-                        Image(systemName: "globe")
-                        Text(observation.displayPlanet)
+                        Label(observation.displayPlanet, systemImage: "globe")
+                        Spacer()
+                        Label(observation.category.rawValue, systemImage: "tag")
                     }
-                    .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom)
-                
-                // Category and Importance
-                HStack(spacing: 12) {
-                    Label(observation.category.rawValue, systemImage: "tag")
-                        .padding(8)
-                        .background(Color.blue.opacity(0.2))
-                        .cornerRadius(8)
+                    .foregroundStyle(.secondary)
                     
-                    Label(observation.importance.rawValue, systemImage: "exclamationmark.circle")
-                        .padding(8)
-                        .background(Color.orange.opacity(0.2))
-                        .cornerRadius(8)
-                }
-                
-                // Description
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Description")
-                        .font(.headline)
+                    Divider()
+                    
                     Text(observation.observationDescription)
-                        .font(.body)
+                        .fixedSize(horizontal: false, vertical: true)
+                    
+                    HStack {
+                        Label(observation.date.formatted(date: .abbreviated, time: .shortened),
+                              systemImage: "calendar")
+                        Spacer()
+                        Label(observation.importance.rawValue,
+                              systemImage: "exclamationmark.circle")
+                    }
+                    .foregroundStyle(.secondary)
+                    .padding(.top)
                 }
-                .padding(.vertical)
-                
-                // Date
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Observed on")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    Text(observation.date.formatted(date: .long, time: .short))
-                        .font(.subheadline)
-                }
+                .padding()
             }
-            .padding()
         }
         .navigationBarTitleDisplayMode(.inline)
     }
