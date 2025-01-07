@@ -66,7 +66,11 @@ struct HomeView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(Color(.systemBackground))
-                                .shadow(radius: 5)
+                                .shadow(color: Color(.systemGray4), radius: 5)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color(.systemGray5), lineWidth: 0.5)
+                                )
                         )
                         .padding()
                     } else if isLoading {

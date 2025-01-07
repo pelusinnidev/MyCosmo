@@ -9,6 +9,7 @@ import SwiftData
 @main
 struct MyCosmoApp: App {
     let container: ModelContainer
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     
     init() {
         do {
@@ -21,7 +22,11 @@ struct MyCosmoApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            if !hasCompletedOnboarding {
+                OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+            } else {
+                MainTabView()
+            }
         }
         .modelContainer(container)
     }
