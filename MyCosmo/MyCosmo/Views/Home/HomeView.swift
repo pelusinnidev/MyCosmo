@@ -76,7 +76,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationTitle("HomeView")
+            .navigationTitle("Home")
             .sheet(isPresented: $showingDetail) {
                 if let apodData = apodData {
                     APODDetailView(apodData: apodData)
