@@ -32,22 +32,16 @@ struct OnboardingView: View {
         VStack(spacing: spacing) {
             Spacer()
             
-            // Hero animation
-            ZStack {
-                ForEach(0..<3) { index in
-                    Circle()
-                        .fill(.purple.opacity(0.3))
-                        .frame(width: 200 + CGFloat(index * 40))
-                        .blur(radius: CGFloat(index * 5))
-                        .animation(.easeInOut(duration: 2).repeatForever(), value: UUID())
+            // App Icon
+            Image("AppIcon") // Asegúrate de tener AppIcon en Assets
+                .resizable()
+                .frame(width: 180, height: 180)
+                .clipShape(RoundedRectangle(cornerRadius: 45))
+                .shadow(color: .purple.opacity(0.3), radius: 20, x: 0, y: 10)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 45)
+                        .stroke(.white.opacity(0.2), lineWidth: 1)
                 }
-                
-                Image(systemName: "sparkles.square.filled.on.square")
-                    .font(.system(size: 80, weight: .light))
-                    .foregroundStyle(.linearGradient(colors: [.purple, .blue], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .symbolEffect(.bounce, options: .repeating.speed(0.5))
-            }
-            .frame(height: 250)
             
             VStack(spacing: 12) {
                 Text("MyCosmo")
@@ -58,6 +52,18 @@ struct OnboardingView: View {
                     .font(.title3)
                     .foregroundStyle(.secondary)
             }
+            .padding(.top, 32)
+            
+            // Decorative elements
+            HStack(spacing: 20) {
+                ForEach(["star.fill", "moon.stars.fill", "sparkles"], id: \.self) { iconName in
+                    Image(systemName: iconName)
+                        .font(.title2)
+                        .foregroundStyle(.white.opacity(0.7))
+                        .symbolEffect(.pulse)
+                }
+            }
+            .padding(.top, 24)
             
             Spacer()
             
@@ -83,25 +89,38 @@ struct OnboardingView: View {
         TabView(selection: $selectedFeatureIndex) {
             ForEach(Array(OnboardingItem.features.enumerated()), id: \.element.id) { index, item in
                 VStack(spacing: spacing) {
+                    // Section indicator
+                    Text("Feature \(index + 1) of \(OnboardingItem.features.count)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 20)
+                    
                     Spacer()
                     
-                    // Feature card
+                    // Feature card with enhanced design
                     VStack(spacing: spacing) {
                         ZStack {
+                            // Background effects
                             Circle()
                                 .fill(item.tint.opacity(0.2))
                                 .frame(width: 120, height: 120)
                                 .blur(radius: 20)
                             
+                            // Decorative rings
+                            ForEach(0..<2) { ring in
+                                Circle()
+                                    .strokeBorder(item.tint.opacity(0.1), lineWidth: 1)
+                                    .frame(width: 140 + CGFloat(ring * 30),
+                                           height: 140 + CGFloat(ring * 30))
+                            }
+                            
                             Image(systemName: item.systemImage)
                                 .font(.system(size: 60, weight: .light))
-                                .foregroundStyle(
-                                    .linearGradient(
-                                        colors: [item.tint, item.tint.opacity(0.7)],
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
+                                .foregroundStyle(.linearGradient(
+                                    colors: [item.tint, item.tint.opacity(0.7)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
                                 .symbolEffect(.bounce, options: .repeating.speed(0.5))
                         }
                         .frame(height: 160)
@@ -121,7 +140,6 @@ struct OnboardingView: View {
                         }
                         .padding(.horizontal, 32)
                     }
-                    .padding(.top, 40)
                     
                     Spacer()
                     
@@ -158,24 +176,51 @@ struct OnboardingView: View {
         VStack(spacing: 30) {
             Spacer()
             
-            Image(systemName: "star.square.on.square.fill")
-                .font(.system(size: 80))
-                .foregroundStyle(.purple.gradient)
-                .symbolEffect(.bounce, options: .repeating.speed(0.5))
+            // Success animation
+            ZStack {
+                Circle()
+                    .fill(.green.opacity(0.1))
+                    .frame(width: 160, height: 160)
+                    .blur(radius: 20)
+                
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 80))
+                    .foregroundStyle(.green.gradient)
+                    .symbolEffect(.bounce)
+            }
             
-            Text("Welcome to MyCosmo!")
-                .font(.title)
-                .bold()
+            VStack(spacing: 16) {
+                Text("Welcome to MyCosmo!")
+                    .font(.title)
+                    .bold()
+                
+                Text("We hope you enjoy your cosmic journey")
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+            }
             
-            Text("We hope you enjoy your cosmic journey")
-                .font(.title3)
-                .foregroundStyle(.secondary)
+            // Decorative elements
+            HStack(spacing: 40) {
+                ForEach(["star.fill", "moon.stars.fill", "sun.max.fill"], id: \.self) { icon in
+                    Image(systemName: icon)
+                        .font(.title)
+                        .foregroundStyle(.purple.gradient)
+                        .symbolEffect(.pulse)
+                }
+            }
+            .padding(.top, 32)
             
-            Text(OnboardingItem.credits)
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.top, 20)
+            VStack(spacing: 24) {
+                Text("Ready to explore?")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+                
+                Text(OnboardingItem.credits)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.top, 32)
             
             Spacer()
             
@@ -184,13 +229,16 @@ struct OnboardingView: View {
                     hasCompletedOnboarding = true
                 }
             }) {
-                Text("Start Exploring")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(height: 50)
-                    .frame(maxWidth: .infinity)
-                    .background(.purple.gradient)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                HStack {
+                    Text("Start Exploring")
+                        .font(.headline)
+                    Image(systemName: "arrow.right")
+                }
+                .foregroundColor(.white)
+                .frame(height: 50)
+                .frame(maxWidth: .infinity)
+                .background(.purple.gradient)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
             }
             .padding(.horizontal, horizontalPadding)
             .padding(.bottom, 20)
