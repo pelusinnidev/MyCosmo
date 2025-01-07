@@ -13,9 +13,7 @@ struct MyCosmoApp: App {
     init() {
         do {
             let config = ModelConfiguration(isStoredInMemoryOnly: false)
-            container = try ModelContainer(for:
-                                            UserObservation.self,
-                                            configurations: config)
+            container = try ModelContainer(for: UserObservation.self, configurations: config)
         } catch {
             fatalError("Could not configure container")
         }
