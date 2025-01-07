@@ -34,12 +34,6 @@ struct OnboardingItem: Identifiable {
             description: "Document your astronomical observations, from meteor showers to planetary alignments.",
             systemImage: "binoculars.fill",
             tint: .purple
-        ),
-        OnboardingItem(
-            title: "Customize Your Experience",
-            description: "Personalize your cosmic journey with customizable settings and preferences.",
-            systemImage: "gearshape.fill",
-            tint: .gray
         )
     ]
     

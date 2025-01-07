@@ -18,6 +18,7 @@ struct FeaturesView: View {
                         .padding(.top, 20)
                     
                     Spacer()
+                        .layoutPriority(1)
                     
                     // Feature card with enhanced design
                     VStack(spacing: spacing) {
@@ -64,20 +65,21 @@ struct FeaturesView: View {
                     }
                     
                     Spacer()
+                        .layoutPriority(1)
                     
-                    if index == OnboardingItem.features.count - 1 {
-                        Button(action: action) {
-                            Text("Continue")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(height: 50)
-                                .frame(maxWidth: .infinity)
-                                .background(item.tint.gradient)
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
-                        }
-                        .padding(.horizontal, horizontalPadding)
-                        .padding(.bottom, 20)
+                    Button(action: action) {
+                        Text("Continue")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(height: 50)
+                            .frame(maxWidth: .infinity)
+                            .background(item.tint.gradient)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
+                    .padding(.horizontal, horizontalPadding)
+                    .padding(.bottom, 20)
+                    .opacity(index == OnboardingItem.features.count - 1 ? 1 : 0)
+                    .disabled(index != OnboardingItem.features.count - 1)
                 }
                 .tag(index)
             }
