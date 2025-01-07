@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "venus-mariner-10-pia23791-fig2-16x9-1.jpg.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "venus-mariner-10-pia23791-fig2-16x9-1.jpg@2x.jpg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "venus-mariner-10-pia23791-fig2-16x9-1.jpg@3x.jpg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
