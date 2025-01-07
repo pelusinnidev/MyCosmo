@@ -1,4 +1,3 @@
-import Foundation
 import SwiftData
 import SwiftUI
 
@@ -52,4 +51,20 @@ enum ImportanceLevel: String, Codable, CaseIterable {
     case medium = "Medium"
     case high = "High"
     case critical = "Critical"
+} 
+
+enum Planet: String, Codable, CaseIterable {
+    case mercury = "Mercury"
+    case venus = "Venus"
+    case earth = "Earth"
+    case mars = "Mars"
+    case jupiter = "Jupiter"
+    case saturn = "Saturn"
+    case uranus = "Uranus"
+    case neptune = "Neptune"
+    case other = "Other"
+    
+    var defaultImage: Image {
+        Image(rawValue)
+    }
 } 

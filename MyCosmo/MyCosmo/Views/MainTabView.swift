@@ -3,24 +3,24 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            SolarSystemView()
+            HomeView()
                 .tabItem {
-                    Label("Solar System", systemImage: "globe")
+                    Label("Home", systemImage: "globe.europe.africa.fill")
                 }
 
-            EventsView()
+            SolarSystemView()
                 .tabItem {
-                    Label("Events", systemImage: "calendar")
+                    Label("Solar System", systemImage: "sun.and.horizon.fill")
                 }
 
             ObservationsView()
                 .tabItem {
-                    Label("Observations", systemImage: "magnifyingglass")
+                    Label("Observations", systemImage: "binoculars.fill")
                 }
 
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape")
+                    Label("Settings", systemImage: "gearshape.fill")
                 }
         }
     }
