@@ -17,24 +17,34 @@ struct HomeView: View {
                 VStack(spacing: 16) {
                     // Picture of the Day Section
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Picture of the Day")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .padding(.horizontal)
-                            .padding(.top, 12)
-                        
+                        HStack {
+                            Text("Picture of the Day")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                                                
                         if isLoading {
                             ProgressView()
                                 .frame(maxWidth: .infinity)
                                 .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color(.systemBackground))
+                                        .shadow(color: Color(.systemGray4), radius: 5)
+                                )
+                                .padding(.horizontal)
                         } else if let apodData = apodData {
-                            PictureCardView(
-                                imageURL: apodData.url,
-                                title: apodData.title,
-                                date: apodData.date,
-                                source: "NASA",
-                                onTap: { showingDetail = true }
-                            )
+                            Button(action: { showingDetail = true }) {
+                                PictureCardView(
+                                    imageURL: apodData.url,
+                                    title: apodData.title,
+                                    date: apodData.date,
+                                    source: "NASA"
+                                )
+                            }
+                            .buttonStyle(.plain)
                         } else {
                             ContentUnavailableView(
                                 "Picture Unavailable",
@@ -42,19 +52,14 @@ struct HomeView: View {
                                 description: Text("Could not load the Picture of the Day")
                             )
                             .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color(.systemBackground))
+                                    .shadow(color: Color(.systemGray4), radius: 5)
+                            )
+                            .padding(.horizontal)
                         }
                     }
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color(.systemBackground))
-                            .shadow(color: Color(.systemGray4), radius: 5)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color(.systemGray5), lineWidth: 0.5)
-                            )
-                    )
-                    .padding(.horizontal)
                     
                     // Space News Section
                     VStack(alignment: .leading, spacing: 12) {
@@ -189,36 +194,39 @@ struct PictureCardView: View {
     let title: String
     let date: String
     let source: String
-    let onTap: () -> Void
     
     var body: some View {
-        HStack(spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
+            // Image container
             AsyncImage(url: URL(string: imageURL)) { phase in
                 switch phase {
                 case .empty:
                     ProgressView()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 200)
                 case .success(let image):
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 120, height: 140)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 200)
                         .clipped()
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .onTapGesture(perform: onTap)
                 case .failure:
                     ContentUnavailableView(
                         "Image Unavailable",
                         systemImage: "photo.badge.exclamationmark",
                         description: Text("The image could not be loaded")
                     )
-                    .frame(width: 120, height: 140)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 200)
                 @unknown default:
                     EmptyView()
                 }
             }
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             
+            // Text content
             VStack(alignment: .leading, spacing: 8) {
-                Spacer()
                 Text(title)
                     .font(.title3)
                     .bold()
@@ -229,12 +237,20 @@ struct PictureCardView: View {
                 Text("Source: \(source)")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                Spacer()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .padding(16)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color(.systemGray4), radius: 5)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color(.systemGray5), lineWidth: 0.5)
+                )
+        )
         .padding(.horizontal)
-        .padding(.bottom, 12)
     }
 }
 
