@@ -24,7 +24,7 @@ struct HomeView: View {
                             Spacer()
                         }
                         .padding(.horizontal)
-                                                
+                        
                         if isLoading {
                             ProgressView()
                                 .frame(maxWidth: .infinity)
@@ -46,12 +46,16 @@ struct HomeView: View {
                             }
                             .buttonStyle(.plain)
                         } else {
-                            ContentUnavailableView(
-                                "Picture Unavailable",
-                                systemImage: "photo.badge.exclamationmark",
-                                description: Text("Could not load the Picture of the Day")
-                            )
-                            .padding()
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.orange)
+                                Text("Picture of the Day not available")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            .frame(maxWidth: .infinity)
                             .background(
                                 RoundedRectangle(cornerRadius: 16)
                                     .fill(Color(.systemBackground))
@@ -212,13 +216,15 @@ struct PictureCardView: View {
                         .frame(height: 200)
                         .clipped()
                 case .failure:
-                    ContentUnavailableView(
-                        "Image Unavailable",
-                        systemImage: "photo.badge.exclamationmark",
-                        description: Text("The image could not be loaded")
-                    )
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 200)
+                    HStack {
+                        Image(systemName: "photo.fill")
+                            .foregroundColor(.secondary)
+                        Text("No preview")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 44)
+                    .background(Color(.systemGray6))
                 @unknown default:
                     EmptyView()
                 }

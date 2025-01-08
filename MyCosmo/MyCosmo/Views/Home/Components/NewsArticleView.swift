@@ -21,13 +21,15 @@ struct NewsArticleView: View {
                             .frame(height: 160)
                             .clipped()
                     case .failure:
-                        ContentUnavailableView(
-                            "Image Unavailable",
-                            systemImage: "photo.badge.exclamationmark",
-                            description: Text("Could not load the article image")
-                        )
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 160)
+                        HStack {
+                            Image(systemName: "photo.fill")
+                                .foregroundColor(.secondary)
+                            Text("No preview")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: 44)
+                        .background(Color(.systemGray6))
                     @unknown default:
                         EmptyView()
                     }
