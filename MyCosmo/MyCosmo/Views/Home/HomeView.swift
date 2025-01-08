@@ -2,87 +2,86 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var apodData: APODResponse?
+    @State private var marsPhotos: [MarsRoverPhoto] = []
     @State private var isLoading = true
+    @State private var isMarsLoading = true
     @State private var error: Error?
+    @State private var marsError: Error?
     @State private var showingDetail = false
     @State private var newsArticles: [NewsArticle] = []
     @State private var isLoadingNews = true
     @State private var newsError: Error?
     @State private var selectedFilter: NewsFilter = .all
+    @State private var selectedPlanet: PlanetFilter = .earth
     @State private var isLoadingMore = false
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    // APOD Section
+                    // Picture Section
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Picture of the Day")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .padding(.horizontal)
-                            .padding(.top, 12)
+                        HStack {
+                            Text("Picture of the Day")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                        .padding(.top, 12)
                         
-                        Divider()
-                            .padding(.horizontal)
+                        PlanetPickerView(selectedPlanet: $selectedPlanet)
+                            .padding(.vertical, 4)
                         
-                        if isLoading {
-                            ProgressView()
-                                .frame(maxWidth: .infinity)
+                        if selectedPlanet == .earth {
+                            if isLoading {
+                                ProgressView()
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            } else if let apodData = apodData {
+                                PictureCardView(
+                                    imageURL: apodData.url,
+                                    title: apodData.title,
+                                    date: apodData.date,
+                                    source: "NASA",
+                                    onTap: { showingDetail = true }
+                                )
+                            } else {
+                                ContentUnavailableView(
+                                    "Picture Unavailable",
+                                    systemImage: "photo.badge.exclamationmark",
+                                    description: Text("Could not load the Picture of the Day")
+                                )
                                 .padding()
-                        } else if let apodData = apodData {
-                            HStack(spacing: 16) {
-                                AsyncImage(url: URL(string: apodData.url)) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                    case .success(let image):
-                                        image
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(width: 120, height: 140)
-                                            .clipped()
-                                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                                            .onTapGesture {
-                                                showingDetail = true
-                                            }
-                                    case .failure:
-                                        ContentUnavailableView(
-                                            "Image Unavailable",
-                                            systemImage: "photo.badge.exclamationmark",
-                                            description: Text("The image could not be loaded")
-                                        )
-                                        .frame(width: 120, height: 140)
-                                    @unknown default:
-                                        EmptyView()
-                                    }
-                                }
-                                
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Spacer()
-                                    Text(apodData.title)
-                                        .font(.title3)
-                                        .bold()
-                                        .lineLimit(2)
-                                    Text(apodData.date)
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                    Text("Source: NASA")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                    Spacer()
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
                             }
-                            .padding(.horizontal)
-                            .padding(.bottom, 12)
                         } else {
-                            ContentUnavailableView(
-                                "Picture Unavailable",
-                                systemImage: "photo.badge.exclamationmark",
-                                description: Text("Could not load the Picture of the Day")
-                            )
-                            .padding()
+                            if isMarsLoading {
+                                ProgressView()
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            } else if let photo = marsPhotos.first {
+                                PictureCardView(
+                                    imageURL: photo.imgSrc,
+                                    title: "Mars Rover: \(photo.camera.fullName)",
+                                    date: photo.earthDate,
+                                    source: "NASA Mars Rover",
+                                    onTap: { }
+                                )
+                            } else if let error = marsError {
+                                ContentUnavailableView(
+                                    "Mars Photo Unavailable",
+                                    systemImage: "exclamationmark.triangle",
+                                    description: Text("Error: \(error.localizedDescription)")
+                                )
+                                .padding()
+                            } else {
+                                ContentUnavailableView(
+                                    "No Mars Photos",
+                                    systemImage: "camera.fill",
+                                    description: Text("No recent photos available from Mars Rover")
+                                )
+                                .padding()
+                            }
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -160,24 +159,45 @@ struct HomeView: View {
                 }
             }
             .task {
-                do {
-                    apodData = try await APODService.shared.fetchAPOD()
-                    isLoading = false
-                } catch {
-                    self.error = error
-                    isLoading = false
-                }
+                await loadPictures()
             }
             .task {
                 await loadNews()
             }
-            .onChange(of: selectedFilter) { _ in
+            .onChange(of: selectedFilter) { oldValue, newValue in
                 Task {
                     await loadNews()
                 }
             }
+            .onChange(of: selectedPlanet) { oldValue, newValue in
+                Task {
+                    await loadPictures()
+                }
+            }
             .refreshable {
                 await refresh()
+            }
+        }
+    }
+    
+    private func loadPictures() async {
+        if selectedPlanet == .earth {
+            isLoading = true
+            do {
+                apodData = try await APODService.shared.fetchAPOD()
+                isLoading = false
+            } catch {
+                self.error = error
+                isLoading = false
+            }
+        } else {
+            isMarsLoading = true
+            do {
+                marsPhotos = try await MarsRoverService.shared.fetchLatestPhotos()
+                isMarsLoading = false
+            } catch {
+                marsError = error
+                isMarsLoading = false
             }
         }
     }
@@ -213,15 +233,62 @@ struct HomeView: View {
     }
     
     private func refresh() async {
-        do {
-            async let apodResult = APODService.shared.fetchAPOD()
-            async let newsResult = NewsService.shared.fetchAstronomyNews(filter: selectedFilter)
+        await loadPictures()
+        await loadNews()
+    }
+}
+
+struct PictureCardView: View {
+    let imageURL: String
+    let title: String
+    let date: String
+    let source: String
+    let onTap: () -> Void
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            AsyncImage(url: URL(string: imageURL)) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 120, height: 140)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .onTapGesture(perform: onTap)
+                case .failure:
+                    ContentUnavailableView(
+                        "Image Unavailable",
+                        systemImage: "photo.badge.exclamationmark",
+                        description: Text("The image could not be loaded")
+                    )
+                    .frame(width: 120, height: 140)
+                @unknown default:
+                    EmptyView()
+                }
+            }
             
-            apodData = try await apodResult
-            newsArticles = try await newsResult
-        } catch {
-            self.error = error
+            VStack(alignment: .leading, spacing: 8) {
+                Spacer()
+                Text(title)
+                    .font(.title3)
+                    .bold()
+                    .lineLimit(2)
+                Text(date)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Text("Source: \(source)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .padding(.horizontal)
+        .padding(.bottom, 12)
     }
 }
 

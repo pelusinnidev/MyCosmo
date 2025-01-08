@@ -4,20 +4,23 @@ struct NewsFilterView: View {
     @Binding var selectedFilter: NewsFilter
     
     var body: some View {
-        HStack(spacing: 8) {
-            ForEach(NewsFilter.allCases, id: \.self) { filter in
-                FilterPill(
-                    filter: filter,
-                    isSelected: filter == selectedFilter
-                )
-                .onTapGesture {
-                    withAnimation(.spring(response: 0.3)) {
-                        selectedFilter = filter
+        HStack {
+            Spacer()
+            HStack(spacing: 8) {
+                ForEach(NewsFilter.allCases, id: \.self) { filter in
+                    FilterPill(
+                        filter: filter,
+                        isSelected: filter == selectedFilter
+                    )
+                    .onTapGesture {
+                        withAnimation(.spring(response: 0.3)) {
+                            selectedFilter = filter
+                        }
                     }
                 }
             }
+            Spacer()
         }
-        .padding(.horizontal)
     }
 }
 
