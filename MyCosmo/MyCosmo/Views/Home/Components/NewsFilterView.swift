@@ -4,14 +4,14 @@ struct NewsFilterView: View {
     @Binding var selectedFilter: NewsFilter
     
     var body: some View {
-        HStack {
-            Spacer()
+        GeometryReader { geometry in
             HStack(spacing: 8) {
                 ForEach(NewsFilter.allCases, id: \.self) { filter in
                     FilterPill(
                         filter: filter,
                         isSelected: filter == selectedFilter
                     )
+                    .frame(width: (geometry.size.width - (CGFloat(NewsFilter.allCases.count - 1) * 8) - 32) / CGFloat(NewsFilter.allCases.count))
                     .onTapGesture {
                         withAnimation(.spring(response: 0.3)) {
                             selectedFilter = filter
@@ -19,8 +19,10 @@ struct NewsFilterView: View {
                     }
                 }
             }
-            Spacer()
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 16)
         }
+        .frame(height: 36)
     }
 }
 
@@ -35,9 +37,12 @@ private struct FilterPill: View {
             Text(filter.rawValue)
                 .font(.footnote)
                 .fontWeight(isSelected ? .semibold : .regular)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 6)
+        .frame(maxWidth: .infinity)
         .foregroundColor(isSelected ? .white : filter.color)
         .background(
             Capsule()

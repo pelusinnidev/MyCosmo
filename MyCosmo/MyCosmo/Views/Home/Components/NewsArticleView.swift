@@ -5,37 +5,36 @@ struct NewsArticleView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            if let imageUrl = article.urlToImage,
-               let url = URL(string: imageUrl) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 160)
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 160)
-                            .clipped()
-                    case .failure:
-                        HStack {
-                            Image(systemName: "photo.fill")
-                                .foregroundColor(.secondary)
-                            Text("No preview")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: 44)
-                        .background(Color(.systemGray6))
-                    @unknown default:
-                        EmptyView()
+            // Image section
+            AsyncImage(url: URL(string: article.urlToImage ?? "")) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 160)
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 160)
+                        .clipped()
+                case .failure:
+                    HStack {
+                        Image(systemName: "photo.fill")
+                            .foregroundColor(.secondary)
+                        Text("No preview")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity, maxHeight: 160)
+                    .background(Color(.systemGray6))
+                @unknown default:
+                    EmptyView()
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             
             VStack(alignment: .leading, spacing: 8) {
                 Text(article.title)

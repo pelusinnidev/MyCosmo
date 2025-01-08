@@ -24,6 +24,7 @@ struct HomeView: View {
                             Spacer()
                         }
                         .padding(.horizontal)
+                        .padding(.top)
                         
                         if isLoading {
                             ProgressView()
@@ -119,9 +120,13 @@ struct HomeView: View {
                         }
                     }
                 }
-                .padding(.vertical)
+                .padding(.top)
             }
+            .scrollIndicators(.hidden)
             .navigationTitle("Home")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
             .sheet(isPresented: $showingDetail) {
                 if let apodData = apodData {
                     APODDetailView(apodData: apodData)
@@ -220,10 +225,11 @@ struct PictureCardView: View {
                         Image(systemName: "photo.fill")
                             .foregroundColor(.secondary)
                         Text("No preview")
+                            .padding(.vertical)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 44)
+                    .frame(maxWidth: .infinity)
                     .background(Color(.systemGray6))
                 @unknown default:
                     EmptyView()
