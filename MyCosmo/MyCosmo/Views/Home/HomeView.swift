@@ -2,86 +2,46 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var apodData: APODResponse?
-    @State private var marsPhotos: [MarsRoverPhoto] = []
     @State private var isLoading = true
-    @State private var isMarsLoading = true
     @State private var error: Error?
-    @State private var marsError: Error?
     @State private var showingDetail = false
     @State private var newsArticles: [NewsArticle] = []
     @State private var isLoadingNews = true
     @State private var newsError: Error?
     @State private var selectedFilter: NewsFilter = .all
-    @State private var selectedPlanet: PlanetFilter = .earth
     @State private var isLoadingMore = false
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    // Picture Section
+                    // Picture of the Day Section
                     VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Text("Picture of the Day")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                        .padding(.top, 12)
+                        Text("Picture of the Day")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .padding(.horizontal)
+                            .padding(.top, 12)
                         
-                        PlanetPickerView(selectedPlanet: $selectedPlanet)
-                            .padding(.vertical, 4)
-                        
-                        if selectedPlanet == .earth {
-                            if isLoading {
-                                ProgressView()
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                            } else if let apodData = apodData {
-                                PictureCardView(
-                                    imageURL: apodData.url,
-                                    title: apodData.title,
-                                    date: apodData.date,
-                                    source: "NASA",
-                                    onTap: { showingDetail = true }
-                                )
-                            } else {
-                                ContentUnavailableView(
-                                    "Picture Unavailable",
-                                    systemImage: "photo.badge.exclamationmark",
-                                    description: Text("Could not load the Picture of the Day")
-                                )
+                        if isLoading {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
                                 .padding()
-                            }
+                        } else if let apodData = apodData {
+                            PictureCardView(
+                                imageURL: apodData.url,
+                                title: apodData.title,
+                                date: apodData.date,
+                                source: "NASA",
+                                onTap: { showingDetail = true }
+                            )
                         } else {
-                            if isMarsLoading {
-                                ProgressView()
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                            } else if let photo = marsPhotos.first {
-                                PictureCardView(
-                                    imageURL: photo.imgSrc,
-                                    title: "Mars Rover: \(photo.camera.fullName)",
-                                    date: photo.earthDate,
-                                    source: "NASA Mars Rover",
-                                    onTap: { }
-                                )
-                            } else if let error = marsError {
-                                ContentUnavailableView(
-                                    "Mars Photo Unavailable",
-                                    systemImage: "exclamationmark.triangle",
-                                    description: Text("Error: \(error.localizedDescription)")
-                                )
-                                .padding()
-                            } else {
-                                ContentUnavailableView(
-                                    "No Mars Photos",
-                                    systemImage: "camera.fill",
-                                    description: Text("No recent photos available from Mars Rover")
-                                )
-                                .padding()
-                            }
+                            ContentUnavailableView(
+                                "Picture Unavailable",
+                                systemImage: "photo.badge.exclamationmark",
+                                description: Text("Could not load the Picture of the Day")
+                            )
+                            .padding()
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -159,7 +119,13 @@ struct HomeView: View {
                 }
             }
             .task {
-                await loadPictures()
+                do {
+                    apodData = try await APODService.shared.fetchAPOD()
+                    isLoading = false
+                } catch {
+                    self.error = error
+                    isLoading = false
+                }
             }
             .task {
                 await loadNews()
@@ -169,35 +135,8 @@ struct HomeView: View {
                     await loadNews()
                 }
             }
-            .onChange(of: selectedPlanet) { oldValue, newValue in
-                Task {
-                    await loadPictures()
-                }
-            }
             .refreshable {
                 await refresh()
-            }
-        }
-    }
-    
-    private func loadPictures() async {
-        if selectedPlanet == .earth {
-            isLoading = true
-            do {
-                apodData = try await APODService.shared.fetchAPOD()
-                isLoading = false
-            } catch {
-                self.error = error
-                isLoading = false
-            }
-        } else {
-            isMarsLoading = true
-            do {
-                marsPhotos = try await MarsRoverService.shared.fetchLatestPhotos()
-                isMarsLoading = false
-            } catch {
-                marsError = error
-                isMarsLoading = false
             }
         }
     }
@@ -233,8 +172,15 @@ struct HomeView: View {
     }
     
     private func refresh() async {
-        await loadPictures()
-        await loadNews()
+        do {
+            async let apodResult = APODService.shared.fetchAPOD()
+            async let newsResult = NewsService.shared.fetchAstronomyNews(filter: selectedFilter)
+            
+            apodData = try await apodResult
+            newsArticles = try await newsResult
+        } catch {
+            self.error = error
+        }
     }
 }
 
