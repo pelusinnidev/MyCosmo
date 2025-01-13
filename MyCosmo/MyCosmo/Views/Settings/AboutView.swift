@@ -14,7 +14,7 @@ struct AboutView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("MyCosmo")
                             .font(.headline)
-                        Text("Your personal astronomy companion")
+                        Text("Be your universe.")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }

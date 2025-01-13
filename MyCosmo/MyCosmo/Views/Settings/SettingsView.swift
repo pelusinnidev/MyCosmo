@@ -21,8 +21,7 @@ struct SettingsView: View {
                         } icon: {
                             Image(systemName: appearanceMode == 0 ? "circle.lefthalf.filled" : 
                                               appearanceMode == 1 ? "sun.max.fill" : "moon.stars.fill")
-                                .foregroundStyle(appearanceMode == 0 ? Color.accentColor :
-                                               appearanceMode == 1 ? .yellow : Color.accentColor)
+                                .foregroundStyle(Color.accentColor)
                         }
                     }
                 }
