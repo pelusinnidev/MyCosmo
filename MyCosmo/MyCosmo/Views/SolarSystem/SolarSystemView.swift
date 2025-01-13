@@ -5,7 +5,7 @@ struct SolarSystemView: View {
     @Environment(\.colorScheme) private var colorScheme
     
     private let columns = [
-        GridItem(.adaptive(minimum: 160), spacing: 16)
+        GridItem(.adaptive(minimum: 170), spacing: 8)
     ]
     
     var body: some View {
@@ -16,12 +16,12 @@ struct SolarSystemView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(.top, 40)
                 } else {
-                    LazyVGrid(columns: columns, spacing: 20) {
+                    LazyVGrid(columns: columns, spacing: 8) {
                         ForEach(viewModel.planets) { planet in
                             PlanetCard(planet: planet, viewModel: viewModel)
                         }
                     }
-                    .padding()
+                    .padding(8)
                 }
             }
             .navigationTitle("Solar System")
@@ -59,31 +59,31 @@ struct PlanetCard: View {
                 Image(planet.englishName)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 160, height: 160)
+                    .frame(width: 170, height: 140)
                     .clipShape(
                         .rect(
-                            topLeadingRadius: 20,
+                            topLeadingRadius: 12,
                             bottomLeadingRadius: 0,
                             bottomTrailingRadius: 0,
-                            topTrailingRadius: 20
+                            topTrailingRadius: 12
                         )
                     )
                 
                 Text(planet.englishName)
                     .font(.headline)
                     .padding(.vertical, 8)
-                    .frame(width: 160)
+                    .frame(width: 170)
                     .background(colorScheme == .dark ? Color(.systemGray6) : .white)
                     .clipShape(
                         .rect(
                             topLeadingRadius: 0,
-                            bottomLeadingRadius: 20,
-                            bottomTrailingRadius: 20,
+                            bottomLeadingRadius: 12,
+                            bottomTrailingRadius: 12,
                             topTrailingRadius: 0
                         )
                     )
             }
-            .shadow(radius: 5)
+            .shadow(radius: 3)
         }
         .buttonStyle(.plain)
     }
@@ -93,28 +93,37 @@ struct PlanetDetailView: View {
     let planet: PlanetData
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
+    @State private var currentFact: String
+    
+    init(planet: PlanetData) {
+        self.planet = planet
+        self._currentFact = State(initialValue: planet.randomFunFact)
+    }
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 0) {
                     // Header Image
-                    Image(planet.englishName)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(height: 300)
-                        .clipped()
-                        .overlay {
-                            LinearGradient(
-                                colors: [
-                                    .clear,
-                                    .clear,
-                                    colorScheme == .dark ? .black : .white
-                                ],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        }
+                    GeometryReader { geo in
+                        Image(planet.englishName)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: geo.size.width, height: geo.size.height)
+                            .clipped()
+                    }
+                    .frame(height: 250)
+                    .overlay {
+                        LinearGradient(
+                            colors: [
+                                .clear,
+                                .clear,
+                                colorScheme == .dark ? .black : .white
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    }
                     
                     // Content
                     VStack(spacing: 24) {
@@ -128,6 +137,35 @@ struct PlanetDetailView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .padding(.top)
+                        
+                        // Fun Fact Card
+                        VStack(spacing: 12) {
+                            HStack {
+                                Text("Did you know?")
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                Spacer()
+                                Button {
+                                    withAnimation {
+                                        currentFact = planet.randomFunFact
+                                    }
+                                } label: {
+                                    Image(systemName: "arrow.clockwise")
+                                        .font(.title3)
+                                        .foregroundStyle(.blue)
+                                }
+                            }
+                            
+                            Text(currentFact)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .transition(.opacity)
+                        }
+                        .padding()
+                        .background(colorScheme == .dark ? Color(.systemGray6) : .white)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .shadow(radius: 2)
+                        .padding(.horizontal)
                         
                         // Quick Facts
                         HStack(spacing: 20) {
@@ -196,6 +234,7 @@ struct PlanetDetailView: View {
                     }
                 }
             }
+            .ignoresSafeArea(.all, edges: .top)
         }
     }
 }

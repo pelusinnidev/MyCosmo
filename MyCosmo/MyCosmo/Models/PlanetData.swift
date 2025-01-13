@@ -21,6 +21,7 @@ struct PlanetData: Codable, Identifiable {
     let longAscNode: Double
     let bodyType: String
     let rel: String
+    let funFacts: [String]
     
     struct Moon: Codable, Identifiable {
         var id: String { rel }
@@ -59,6 +60,10 @@ struct PlanetData: Codable, Identifiable {
     
     private var massExponent: Int {
         mass.massExponent
+    }
+    
+    var randomFunFact: String {
+        funFacts.randomElement() ?? "No fun facts available"
     }
 }
 
