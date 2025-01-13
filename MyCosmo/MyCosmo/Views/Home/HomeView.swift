@@ -1,15 +1,8 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var apodData: APODResponse?
-    @State private var isLoading = true
-    @State private var error: Error?
+    @StateObject private var viewModel = HomeViewModel()
     @State private var showingDetail = false
-    @State private var newsArticles: [NewsArticle] = []
-    @State private var isLoadingNews = true
-    @State private var newsError: Error?
-    @State private var selectedFilter: NewsFilter = .all
-    @State private var isLoadingMore = false
     
     var body: some View {
         NavigationStack {
@@ -24,9 +17,8 @@ struct HomeView: View {
                             Spacer()
                         }
                         .padding(.horizontal)
-                        .padding(.top)
                         
-                        if isLoading {
+                        if viewModel.isLoading {
                             ProgressView()
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -36,7 +28,7 @@ struct HomeView: View {
                                         .shadow(color: Color(.systemGray4), radius: 5)
                                 )
                                 .padding(.horizontal)
-                        } else if let apodData = apodData {
+                        } else if let apodData = viewModel.apodData {
                             Button(action: { showingDetail = true }) {
                                 PictureCardView(
                                     imageURL: apodData.url,
@@ -76,20 +68,20 @@ struct HomeView: View {
                         }
                         .padding(.horizontal)
                         
-                        NewsFilterView(selectedFilter: $selectedFilter)
+                        NewsFilterView(selectedFilter: $viewModel.selectedFilter)
                         
-                        if isLoadingNews {
+                        if viewModel.isLoadingNews {
                             ProgressView()
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                        } else if let _ = newsError {
+                        } else if viewModel.newsError != nil {
                             ContentUnavailableView(
                                 "News Unavailable",
                                 systemImage: "newspaper.fill",
                                 description: Text("Could not load the latest space news")
                             )
                             .padding()
-                        } else if newsArticles.isEmpty {
+                        } else if viewModel.newsArticles.isEmpty {
                             ContentUnavailableView(
                                 "No News Available",
                                 systemImage: "newspaper",
@@ -98,12 +90,12 @@ struct HomeView: View {
                             .padding()
                         } else {
                             LazyVStack(spacing: 12) {
-                                ForEach(newsArticles) { article in
+                                ForEach(viewModel.newsArticles) { article in
                                     NewsArticleView(article: article)
                                 }
                                 
-                                if !isLoadingMore {
-                                    Button(action: loadMore) {
+                                if !viewModel.isLoadingMore {
+                                    Button(action: { viewModel.loadMore() }) {
                                         HStack {
                                             Image(systemName: "arrow.down.circle.fill")
                                             Text("Load More Articles")
@@ -120,7 +112,6 @@ struct HomeView: View {
                         }
                     }
                 }
-                .padding(.top)
             }
             .scrollIndicators(.hidden)
             .navigationTitle("Home")
@@ -128,72 +119,25 @@ struct HomeView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color(.systemBackground), for: .navigationBar)
             .sheet(isPresented: $showingDetail) {
-                if let apodData = apodData {
+                if let apodData = viewModel.apodData {
                     APODDetailView(apodData: apodData)
                 }
             }
             .task {
-                do {
-                    apodData = try await APODService.shared.fetchAPOD()
-                    isLoading = false
-                } catch {
-                    self.error = error
-                    isLoading = false
-                }
+                await viewModel.loadAPOD()
             }
             .task {
-                await loadNews()
+                await viewModel.loadNews()
             }
-            .onChange(of: selectedFilter) { oldValue, newValue in
+            .onChange(of: viewModel.selectedFilter) { oldValue, newValue in
                 Task {
-                    await loadNews()
+                    await viewModel.loadNews()
                 }
             }
             .refreshable {
-                await refresh()
+                await viewModel.refresh()
             }
-        }
-    }
-    
-    private func loadNews() async {
-        isLoadingNews = true
-        newsError = nil
-        do {
-            newsArticles = try await NewsService.shared.fetchAstronomyNews(filter: selectedFilter)
-            isLoadingNews = false
-        } catch {
-            newsError = error
-            isLoadingNews = false
-        }
-    }
-    
-    private func loadMore() {
-        guard !isLoadingMore else { return }
-        
-        Task {
-            isLoadingMore = true
-            do {
-                let moreArticles = try await NewsService.shared.loadMoreNews(
-                    filter: selectedFilter,
-                    currentArticles: newsArticles
-                )
-                newsArticles = moreArticles
-            } catch {
-                // Handle error silently
-            }
-            isLoadingMore = false
-        }
-    }
-    
-    private func refresh() async {
-        do {
-            async let apodResult = APODService.shared.fetchAPOD()
-            async let newsResult = NewsService.shared.fetchAstronomyNews(filter: selectedFilter)
-            
-            apodData = try await apodResult
-            newsArticles = try await newsResult
-        } catch {
-            self.error = error
+            .safeAreaInset(top: 0)
         }
     }
 }
@@ -248,19 +192,14 @@ struct PictureCardView: View {
                     .foregroundColor(.secondary)
                 Text("Source: \(source)")
                     .font(.caption)
-                    .foregroundColor(.secondary)
             }
+            .padding(.horizontal)
         }
-        .padding(16)
-        .frame(maxWidth: .infinity)
+        .padding(.bottom)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(.systemBackground))
                 .shadow(color: Color(.systemGray4), radius: 5)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(.systemGray5), lineWidth: 0.5)
-                )
         )
         .padding(.horizontal)
     }
