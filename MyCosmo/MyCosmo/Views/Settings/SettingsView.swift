@@ -49,7 +49,7 @@ struct SettingsView: View {
                 Section("App Information") {
                     InfoSheetRow(symbol: "number.circle.fill",
                                title: "Version",
-                               description: "1.0.0")
+                               description: "\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""))")
                         .foregroundStyle(Color.primary)
                 }
             }
