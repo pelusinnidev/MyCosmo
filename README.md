@@ -4,6 +4,8 @@
 
 MyCosmo is a comprehensive iOS application that brings the wonders of space exploration and astronomy right to your fingertips. Developed as part of the DAM2 - M08 course at La Salle Gràcia by Pol Hernàndez & Adrià Sanchez.
 
+![Screenshot 2025-01-13 at 13 25 54](https://github.com/user-attachments/assets/0ba134bb-f24c-41ad-a614-992859b16ce4)
+
 ## ✨ Features
 
 - **Space News Feed**: Stay updated with the latest space news and discoveries using the Spaceflight News API
