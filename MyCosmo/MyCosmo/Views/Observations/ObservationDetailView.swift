@@ -3,6 +3,7 @@ import SwiftUI
 struct ObservationDetailView: View {
     @StateObject private var viewModel: ObservationDetailViewModel
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) var dismiss
     @State private var selectedImageIndex = 0
     
     private let columns = [
@@ -81,6 +82,29 @@ struct ObservationDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .background(Color(.systemGroupedBackground))
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(role: .destructive) {
+                    viewModel.showDeleteAlert = true
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .alert("Delete Observation", isPresented: $viewModel.showDeleteAlert) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                viewModel.deleteObservation()
+            }
+        } message: {
+            Text("Are you sure you want to delete this observation? This action cannot be undone.")
+        }
+        .onChange(of: viewModel.shouldDismiss) { _, newValue in
+            if newValue {
+                dismiss()
+            }
+        }
     }
 }
 

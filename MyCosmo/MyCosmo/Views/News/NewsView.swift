@@ -42,7 +42,11 @@ struct NewsView: View {
                     .padding(.vertical, 8)
                     
                     // News Cards
-                    LazyVStack(spacing: 16) {
+                    let columns = [
+                        GridItem(.adaptive(minimum: 300), spacing: 16)
+                    ]
+                    
+                    LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(viewModel.newsArticles) { article in
                             NewsCard(article: article)
                         }
