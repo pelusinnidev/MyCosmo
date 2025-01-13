@@ -5,6 +5,7 @@ import PhotosUI
 struct AddObservationView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
     
     @State private var title = ""
     @State private var description = ""
@@ -12,33 +13,72 @@ struct AddObservationView: View {
     @State private var customPlanet = ""
     @State private var category = ObservationCategory.other
     @State private var importance = ImportanceLevel.medium
-    @State private var selectedItem: PhotosPickerItem?
-    @State private var customImage: UIImage?
-    @State private var useCustomImage = false
+    @State private var selectedItems: [PhotosPickerItem] = []
+    @State private var selectedImages: [UIImage] = []
+    @State private var useCustomImages = false
+    
+    private let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
     
     var body: some View {
         NavigationStack {
             Form {
-                Section("Image") {
-                    Toggle("Use Custom Image", isOn: $useCustomImage)
+                Section("Images") {
+                    Toggle("Use Custom Images", isOn: $useCustomImages)
                     
-                    if useCustomImage {
-                        PhotosPicker(selection: $selectedItem, matching: .images) {
-                            if let customImage {
-                                Image(uiImage: customImage)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 200)
-                                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                                    .shadow(radius: 3)
-                                    .padding(.horizontal)
-                            } else {
-                                ContentUnavailableView("No Image Selected", 
-                                    systemImage: "photo.badge.plus",
-                                    description: Text("Tap to select an image"))
-                                    .frame(height: 200)
+                    if useCustomImages {
+                        PhotosPicker(selection: $selectedItems,
+                                   maxSelectionCount: 10,
+                                   matching: .images,
+                                   photoLibrary: .shared()) {
+                            Label("Select Images", systemImage: "photo.stack")
+                        }
+                        
+                        if !selectedImages.isEmpty {
+                            TabView {
+                                ForEach(selectedImages, id: \.self) { image in
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 200)
+                                }
                             }
+                            .frame(height: 200)
+                            .tabViewStyle(.page)
+                            .indexViewStyle(.page(backgroundDisplayMode: .always))
+                            
+                            // Thumbnails Grid
+                            LazyVGrid(columns: columns, spacing: 8) {
+                                ForEach(selectedImages.indices, id: \.self) { index in
+                                    ZStack(alignment: .topTrailing) {
+                                        Image(uiImage: selectedImages[index])
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: 80, height: 80)
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        
+                                        Button {
+                                            selectedImages.remove(at: index)
+                                            selectedItems.remove(at: index)
+                                        } label: {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundStyle(.white, Color(.systemGray3))
+                                                .background(Circle().fill(Color.black.opacity(0.5)))
+                                        }
+                                        .offset(x: 6, y: -6)
+                                    }
+                                }
+                            }
+                            .padding(.top, 8)
+                        } else {
+                            ContentUnavailableView("No Images Selected", 
+                                systemImage: "photo.stack",
+                                description: Text("Select up to 10 images"))
+                                .frame(height: 200)
                         }
                     } else {
                         selectedPlanet.defaultImage
@@ -54,11 +94,6 @@ struct AddObservationView: View {
                 
                 Section("Basic Information") {
                     TextField("Title", text: $title)
-                        .textInputAutocapitalization(.words)
-                        .placeholder(when: title.isEmpty) {
-                            Text("Enter observation title")
-                                .foregroundColor(.gray)
-                        }
                     
                     Picker("Planet", selection: $selectedPlanet) {
                         ForEach(Planet.allCases, id: \.self) { planet in
@@ -68,22 +103,19 @@ struct AddObservationView: View {
                     
                     if selectedPlanet == .other {
                         TextField("Custom planet name", text: $customPlanet)
-                            .textInputAutocapitalization(.words)
-                            .placeholder(when: customPlanet.isEmpty) {
-                                Text("Enter planet name")
-                                    .foregroundColor(.gray)
-                            }
                     }
                 }
                 
                 Section("Description") {
                     TextEditor(text: $description)
                         .frame(minHeight: 100)
-                        .placeholder(when: description.isEmpty) {
-                            Text("Describe your observation in detail...")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
-                                .padding(.leading, 4)
+                        .overlay(alignment: .topLeading) {
+                            if description.isEmpty {
+                                Text("Describe your observation...")
+                                    .foregroundColor(.gray)
+                                    .padding(.top, 8)
+                                    .padding(.leading, 5)
+                            }
                         }
                 }
                 
@@ -119,11 +151,14 @@ struct AddObservationView: View {
                 }
             }
         }
-        .onChange(of: selectedItem) { oldValue, newValue in
+        .onChange(of: selectedItems) { oldValue, newValue in
             Task {
-                if let data = try? await newValue?.loadTransferable(type: Data.self) {
-                    if let image = UIImage(data: data) {
-                        customImage = image
+                selectedImages.removeAll()
+                
+                for item in newValue {
+                    if let data = try? await item.loadTransferable(type: Data.self),
+                       let image = UIImage(data: data) {
+                        selectedImages.append(image)
                     }
                 }
             }
@@ -137,9 +172,17 @@ struct AddObservationView: View {
     }
     
     private func saveObservation() {
-        var imageData: Data? = nil
-        if useCustomImage, let customImage {
-            imageData = customImage.jpegData(compressionQuality: 0.8)
+        var mainImageData: Data? = nil
+        var additionalImagesData: [Data] = []
+        
+        if useCustomImages && !selectedImages.isEmpty {
+            // Primera imagen como principal
+            mainImageData = selectedImages[0].jpegData(compressionQuality: 0.8)
+            
+            // Resto de imágenes como adicionales
+            if selectedImages.count > 1 {
+                additionalImagesData = selectedImages[1...].compactMap { $0.jpegData(compressionQuality: 0.8) }
+            }
         }
         
         let observation = UserObservation(
@@ -149,7 +192,8 @@ struct AddObservationView: View {
             customPlanet: selectedPlanet == .other ? customPlanet : nil,
             category: category,
             importance: importance,
-            customImage: imageData
+            customImage: mainImageData,
+            additionalImages: additionalImagesData.isEmpty ? nil : additionalImagesData
         )
         modelContext.insert(observation)
         dismiss()

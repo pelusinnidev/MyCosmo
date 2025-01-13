@@ -3,14 +3,14 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            HomeView()
+            NewsView()
                 .tabItem {
-                    Label("Home", systemImage: "globe.europe.africa.fill")
+                    Label("News", systemImage: "newspaper.fill")
                 }
 
             SolarSystemView()
                 .tabItem {
-                    Label("Solar System", systemImage: "sun.and.horizon.fill")
+                    Label("Solar System", systemImage: "globe.europe.africa.fill")
                 }
 
             ObservationsView()

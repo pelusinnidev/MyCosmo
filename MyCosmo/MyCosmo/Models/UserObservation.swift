@@ -10,7 +10,8 @@ final class UserObservation {
     var category: ObservationCategory
     var importance: ImportanceLevel
     var date: Date
-    var customImage: Data?  // Para guardar la imagen personalizada
+    var customImage: Data?  // Para guardar la imagen principal
+    var additionalImages: [Data]? // Para guardar imágenes adicionales
     
     var displayPlanet: String {
         if selectedPlanet == .other {
@@ -27,7 +28,15 @@ final class UserObservation {
         return selectedPlanet.defaultImage
     }
     
-    init(title: String, description: String, selectedPlanet: Planet, customPlanet: String? = nil, category: ObservationCategory, importance: ImportanceLevel, date: Date = Date(), customImage: Data? = nil) {
+    init(title: String, 
+         description: String, 
+         selectedPlanet: Planet, 
+         customPlanet: String? = nil, 
+         category: ObservationCategory, 
+         importance: ImportanceLevel, 
+         date: Date = Date(), 
+         customImage: Data? = nil,
+         additionalImages: [Data]? = nil) {
         self.title = title
         self.observationDescription = description
         self.selectedPlanet = selectedPlanet
@@ -36,6 +45,7 @@ final class UserObservation {
         self.importance = importance
         self.date = date
         self.customImage = customImage
+        self.additionalImages = additionalImages
     }
 }
 
