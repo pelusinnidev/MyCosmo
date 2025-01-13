@@ -69,19 +69,24 @@ struct PlanetCard: View {
                         )
                     )
                 
-                Text(planet.englishName)
-                    .font(.headline)
-                    .padding(.vertical, 8)
-                    .frame(width: 170)
-                    .background(colorScheme == .dark ? Color(.systemGray6) : .white)
-                    .clipShape(
-                        .rect(
-                            topLeadingRadius: 0,
-                            bottomLeadingRadius: 12,
-                            bottomTrailingRadius: 12,
-                            topTrailingRadius: 0
-                        )
+                VStack(spacing: 4) {
+                    Text(planet.englishName)
+                        .font(.headline)
+                    Text("\(Int(planet.avgTemp - 273.15))°C")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.vertical, 8)
+                .frame(width: 170)
+                .background(colorScheme == .dark ? Color(.systemGray6) : .white)
+                .clipShape(
+                    .rect(
+                        topLeadingRadius: 0,
+                        bottomLeadingRadius: 12,
+                        bottomTrailingRadius: 12,
+                        topTrailingRadius: 0
                     )
+                )
             }
             .shadow(radius: 3)
         }
@@ -111,19 +116,19 @@ struct PlanetDetailView: View {
                             .scaledToFill()
                             .frame(width: geo.size.width, height: geo.size.height)
                             .clipped()
+                            .overlay {
+                                LinearGradient(
+                                    colors: [
+                                        .clear,
+                                        .clear,
+                                        colorScheme == .dark ? .black.opacity(0.8) : .white.opacity(0.8)
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            }
                     }
                     .frame(height: 250)
-                    .overlay {
-                        LinearGradient(
-                            colors: [
-                                .clear,
-                                .clear,
-                                colorScheme == .dark ? .black : .white
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    }
                     
                     // Content
                     VStack(spacing: 24) {
@@ -138,7 +143,7 @@ struct PlanetDetailView: View {
                         }
                         .padding(.top)
                         
-                        // Fun Fact Card
+                        // Fun Fact Card with improved animation
                         VStack(spacing: 12) {
                             HStack {
                                 Text("Did you know?")
@@ -146,48 +151,57 @@ struct PlanetDetailView: View {
                                     .fontWeight(.bold)
                                 Spacer()
                                 Button {
-                                    withAnimation {
+                                    withAnimation(.easeInOut) {
                                         currentFact = planet.randomFunFact
                                     }
                                 } label: {
-                                    Image(systemName: "arrow.clockwise")
-                                        .font(.title3)
-                                        .foregroundStyle(.blue)
+                                    Image(systemName: "arrow.clockwise.circle.fill")
+                                        .font(.title2)
+                                        .foregroundStyle(colorScheme == .dark ? .blue : .indigo)
+                                        .symbolEffect(.bounce, value: currentFact)
                                 }
                             }
                             
                             Text(currentFact)
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .transition(.opacity)
+                                .id(currentFact) // Para mejor animación
+                                .transition(.opacity.combined(with: .slide))
                         }
                         .padding()
                         .background(colorScheme == .dark ? Color(.systemGray6) : .white)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .shadow(radius: 2)
+                        .shadow(radius: colorScheme == .dark ? 1 : 2)
                         .padding(.horizontal)
                         
                         // Quick Facts
-                        HStack(spacing: 20) {
-                            if let moons = planet.moons {
+                        VStack(spacing: 16) {
+                            Text("Quick Facts")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            HStack(spacing: 12) {
+                                if let moons = planet.moons {
+                                    QuickFactView(
+                                        icon: "moon.stars.fill",
+                                        value: "\(moons.count)",
+                                        label: "Moons"
+                                    )
+                                }
+                                
                                 QuickFactView(
-                                    icon: "moon.stars.fill",
-                                    value: "\(moons.count)",
-                                    label: "Moons"
+                                    icon: "thermometer",
+                                    value: "\(Int(planet.avgTemp - 273.15))°C",
+                                    label: "Avg Temp"
+                                )
+                                
+                                QuickFactView(
+                                    icon: "ruler.fill",
+                                    value: "\(Int(planet.meanRadius))",
+                                    label: "Radius (km)"
                                 )
                             }
-                            
-                            QuickFactView(
-                                icon: "thermometer",
-                                value: "\(Int(planet.avgTemp - 273.15))°C",
-                                label: "Avg Temp"
-                            )
-                            
-                            QuickFactView(
-                                icon: "ruler.fill",
-                                value: "\(Int(planet.meanRadius))",
-                                label: "Radius (km)"
-                            )
                         }
                         .padding(.horizontal)
                         
@@ -229,7 +243,7 @@ struct PlanetDetailView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(colorScheme == .dark ? .white.opacity(0.8) : .black.opacity(0.6))
                             .font(.title3)
                     }
                 }
@@ -243,19 +257,24 @@ struct QuickFactView: View {
     let icon: String
     let value: String
     let label: String
+    @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
         VStack(spacing: 4) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundStyle(.blue)
+                .foregroundStyle(colorScheme == .dark ? .blue : .indigo)
             Text(value)
                 .font(.headline)
             Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
+        .padding()
         .frame(maxWidth: .infinity)
+        .background(colorScheme == .dark ? Color(.systemGray6) : .white)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(radius: colorScheme == .dark ? 1 : 2)
     }
 }
 
@@ -269,6 +288,7 @@ struct InfoCard<Content: View>: View {
             Text(title)
                 .font(.title3)
                 .fontWeight(.bold)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
             
             content()
         }
@@ -276,7 +296,7 @@ struct InfoCard<Content: View>: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(colorScheme == .dark ? Color(.systemGray6) : .white)
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(radius: 2)
+        .shadow(radius: colorScheme == .dark ? 1 : 2)
         .padding(.horizontal)
     }
 }
