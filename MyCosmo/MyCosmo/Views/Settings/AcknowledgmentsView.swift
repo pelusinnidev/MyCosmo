@@ -11,10 +11,6 @@ struct AcknowledgmentsView: View {
                 InfoSheetRow(symbol: "newspaper.fill",
                            title: "Space News API",
                            description: "Latest space news and articles")
-                
-                InfoSheetRow(symbol: "sun.max.fill",
-                           title: "Solar System OpenData",
-                           description: "Planetary information and data")
             }
             
             Section("Documentation") {

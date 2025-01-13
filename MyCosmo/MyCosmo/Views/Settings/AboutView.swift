@@ -4,23 +4,37 @@ struct AboutView: View {
     var body: some View {
         List {
             Section {
-                InfoSheetRow(symbol: "app.fill",
-                           title: "MyCosmo",
-                           description: "Your personal astronomy companion")
+                HStack {
+                    Image("AppIconResource")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 60, height: 60)
+                        .cornerRadius(12)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("MyCosmo")
+                            .font(.headline)
+                        Text("Be your universe.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.leading, 8)
+                }
+                .padding(.vertical, 4)
             }
             
             Section("Project") {
-                InfoSheetRow(symbol: "person.fill",
-                           title: "Creator",
-                           description: "Pol Huertas Barros")
+                InfoSheetRow(symbol: "person.2.fill",
+                           title: "Creators",
+                           description: "Pol Hernàndez & Adrià Sanchez")
                 
                 InfoSheetRow(symbol: "building.columns.fill",
                            title: "School",
-                           description: "Universitat Politècnica de Catalunya (UPC)")
+                           description: "La Salle Gràcia")
                 
                 InfoSheetRow(symbol: "doc.text.fill",
                            title: "Course",
-                           description: "Final Degree Project - 2024")
+                           description: "DAM2 - M08")
             }
             
             Section("Technologies") {
@@ -32,13 +46,9 @@ struct AboutView: View {
                            title: "Async/Await",
                            description: "Modern concurrency")
                 
-                InfoSheetRow(symbol: "externaldrive.fill.badge.person",
-                           title: "Core Data",
+                InfoSheetRow(symbol: "archivebox.fill",
+                           title: "Swift Data",
                            description: "Local data persistence")
-                
-                InfoSheetRow(symbol: "chart.bar.fill",
-                           title: "Charts",
-                           description: "Data visualization")
             }
         }
         .navigationTitle("About")

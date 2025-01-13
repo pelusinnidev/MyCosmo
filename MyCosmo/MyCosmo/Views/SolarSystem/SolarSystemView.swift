@@ -306,19 +306,10 @@ struct PlanetDetailView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(colorScheme == .dark ? .white.opacity(0.8) : .black.opacity(0.6))
-                            .font(.title3)
-                    }
-                }
-            }
             .ignoresSafeArea(.all, edges: .top)
         }
+        .presentationDragIndicator(.visible)
+        .interactiveDismissDisabled(false)
     }
 }
 

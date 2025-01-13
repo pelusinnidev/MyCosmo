@@ -4,7 +4,6 @@ struct InfoSheetRow: View {
     let symbol: String
     let title: String
     let description: String
-    @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
         Label {
@@ -17,7 +16,7 @@ struct InfoSheetRow: View {
             }
         } icon: {
             Image(systemName: symbol)
-                .foregroundStyle(colorScheme == .dark ? .blue : .indigo)
+                .foregroundStyle(Color.accentColor)
                 .font(.title3)
         }
         .padding(.vertical, 4)
