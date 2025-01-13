@@ -1,36 +1,55 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("appearanceMode") private var appearanceMode = 0 // 0: system, 1: light, 2: dark
     @AppStorage("selectedLanguage") private var selectedLanguage = "English"
+    
+    private let appearanceModes = ["System", "Light", "Dark"]
+    private let languages = ["English", "Español", "Català"]
     
     var body: some View {
         NavigationStack {
             List {
                 Section("Appearance") {
-                    Toggle(isOn: $isDarkMode) {
-                        InfoSheetRow(symbol: "moon.stars.fill",
-                                   title: "Dark Mode",
-                                   description: "Switch between light and dark appearance")
-                    }
-                    
-                    NavigationLink {
-                        Text("Language Settings")
-                            .navigationTitle("Language")
-                    } label: {
-                        InfoSheetRow(symbol: "globe",
-                                   title: "Language",
-                                   description: "Change app language")
+                    HStack {
+                        Label {
+                            Picker("Theme", selection: $appearanceMode) {
+                                ForEach(0..<appearanceModes.count, id: \.self) { index in
+                                    Text(appearanceModes[index])
+                                }
+                            }
+                        } icon: {
+                            Image(systemName: appearanceMode == 0 ? "circle.lefthalf.filled" : 
+                                              appearanceMode == 1 ? "sun.max.fill" : "moon.stars.fill")
+                                .foregroundStyle(appearanceMode == 0 ? Color.accentColor :
+                                               appearanceMode == 1 ? .yellow : Color.accentColor)
+                        }
                     }
                 }
                 
-                Section {
+                Section("Language") {
+                    HStack {
+                        Label {
+                            Picker("Language", selection: $selectedLanguage) {
+                                ForEach(languages, id: \.self) { language in
+                                    Text(language)
+                                }
+                            }
+                        } icon: {
+                            Image(systemName: "globe")
+                                .foregroundStyle(Color.accentColor)
+                        }
+                    }
+                }
+                
+                Section("About") {
                     NavigationLink {
                         AboutView()
                     } label: {
                         InfoSheetRow(symbol: "info.circle.fill",
                                    title: "About",
                                    description: "Information about the project")
+                            .foregroundStyle(Color.primary)
                     }
                     
                     NavigationLink {
@@ -39,16 +58,27 @@ struct SettingsView: View {
                         InfoSheetRow(symbol: "heart.fill",
                                    title: "Acknowledgments",
                                    description: "APIs and resources used")
+                            .foregroundStyle(Color.primary)
                     }
                 }
                 
-                Section {
+                Section("App Information") {
                     InfoSheetRow(symbol: "number.circle.fill",
                                title: "Version",
                                description: "1.0.0")
+                        .foregroundStyle(Color.primary)
                 }
             }
             .navigationTitle("Settings")
+        }
+        .preferredColorScheme(colorScheme)
+    }
+    
+    private var colorScheme: ColorScheme? {
+        switch appearanceMode {
+        case 1: return .light
+        case 2: return .dark
+        default: return nil
         }
     }
 }
