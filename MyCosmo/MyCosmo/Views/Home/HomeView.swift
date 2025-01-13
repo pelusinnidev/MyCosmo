@@ -8,66 +8,8 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    // Picture of the Day Section
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Text("Picture of the Day")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                        
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .fill(Color(.systemBackground))
-                                        .shadow(color: Color(.systemGray4), radius: 5)
-                                )
-                                .padding(.horizontal)
-                        } else if let apodData = viewModel.apodData {
-                            Button(action: { showingDetail = true }) {
-                                PictureCardView(
-                                    imageURL: apodData.url,
-                                    title: apodData.title,
-                                    date: apodData.date,
-                                    source: "NASA"
-                                )
-                            }
-                            .buttonStyle(.plain)
-                        } else {
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundColor(.orange)
-                                Text("Picture of the Day not available")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 12)
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color(.systemBackground))
-                                    .shadow(color: Color(.systemGray4), radius: 5)
-                            )
-                            .padding(.horizontal)
-                        }
-                    }
-                    
                     // Space News Section
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Text("Space News")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                        
+                    VStack(alignment: .leading, spacing: 12) {                        
                         NewsFilterView(selectedFilter: $viewModel.selectedFilter)
                         
                         if viewModel.isLoadingNews {
@@ -113,11 +55,16 @@ struct HomeView: View {
                     }
                 }
             }
-            .scrollIndicators(.hidden)
-            .navigationTitle("Home")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+            .navigationTitle("News")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingDetail = true
+                    } label: {
+                        Image(systemName: "camera.badge.clock")
+                    }
+                }
+            }
             .sheet(isPresented: $showingDetail) {
                 if let apodData = viewModel.apodData {
                     APODDetailView(apodData: apodData)
@@ -137,7 +84,6 @@ struct HomeView: View {
             .refreshable {
                 await viewModel.refresh()
             }
-            .safeAreaInset(top: 0)
         }
     }
 }

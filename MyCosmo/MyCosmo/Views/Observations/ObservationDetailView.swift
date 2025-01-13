@@ -56,11 +56,10 @@ struct ObservationDetailView: View {
     NavigationStack {
         ObservationDetailView(observation: UserObservation(
             title: "Sample Observation",
-            planet: "Mars",
-            observationDescription: "A test observation",
-            category: .planet,
-            importance: .high,
-            date: Date()
+            description: "A test observation of Mars",
+            selectedPlanet: .mars,
+            category: .astronomical,
+            importance: .high
         ))
     }
 } 
