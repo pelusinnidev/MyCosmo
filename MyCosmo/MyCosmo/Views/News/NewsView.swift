@@ -127,26 +127,29 @@ struct NewsCard: View {
                     Text(article.title)
                         .font(.headline)
                         .foregroundColor(.primary)
-                        .lineLimit(2)
+                        .lineLimit(3)
+                        .multilineTextAlignment(.leading)
                     
                     Text(article.summary)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                        .lineLimit(2)
+                        .lineLimit(3)
+                        .multilineTextAlignment(.leading)
                     
-                    HStack {
+                    HStack(alignment: .center, spacing: 8) {
                         Text(article.newsSite)
                             .font(.caption)
                             .foregroundColor(.secondary)
+                            .lineLimit(1)
                         
                         Spacer()
                         
                         Text(formatDate(article.publishedAt))
                             .font(.caption)
                             .foregroundColor(.secondary)
+                            .lineLimit(1)
                     }
                 }
-                .padding(.horizontal, 4)
             }
             .padding(12)
             .background(
