@@ -1,12 +1,16 @@
 import SwiftUI
 
 struct ObservationDetailView: View {
-    let observation: UserObservation
+    @StateObject private var viewModel: ObservationDetailViewModel
+    
+    init(observation: UserObservation) {
+        _viewModel = StateObject(wrappedValue: ObservationDetailViewModel(observation: observation))
+    }
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                observation.displayImage
+                viewModel.observation.displayImage
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(maxWidth: .infinity)
@@ -15,27 +19,27 @@ struct ObservationDetailView: View {
                     .padding(.horizontal)
                 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(observation.title)
+                    Text(viewModel.observation.title)
                         .font(.title)
                         .bold()
                     
                     HStack {
-                        Label(observation.displayPlanet, systemImage: "globe")
+                        Label(viewModel.observation.displayPlanet, systemImage: "globe")
                         Spacer()
-                        Label(observation.category.rawValue, systemImage: "tag")
+                        Label(viewModel.observation.category.rawValue, systemImage: "tag")
                     }
                     .foregroundStyle(.secondary)
                     
                     Divider()
                     
-                    Text(observation.observationDescription)
+                    Text(viewModel.observation.observationDescription)
                         .fixedSize(horizontal: false, vertical: true)
                     
                     HStack {
-                        Label(observation.date.formatted(date: .abbreviated, time: .shortened),
+                        Label(viewModel.formattedDate,
                               systemImage: "calendar")
                         Spacer()
-                        Label(observation.importance.rawValue,
+                        Label(viewModel.observation.importance.rawValue,
                               systemImage: "exclamationmark.circle")
                     }
                     .foregroundStyle(.secondary)
@@ -45,5 +49,18 @@ struct ObservationDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+#Preview {
+    NavigationStack {
+        ObservationDetailView(observation: UserObservation(
+            title: "Sample Observation",
+            planet: "Mars",
+            observationDescription: "A test observation",
+            category: .planet,
+            importance: .high,
+            date: Date()
+        ))
     }
 } 
