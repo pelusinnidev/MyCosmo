@@ -9,6 +9,6 @@ class ObservationDetailViewModel: ObservableObject {
     }
     
     var formattedDate: String {
-        observation.date.formatted(date: .abbreviated, time: .shortened)
+        observation.date.formatted(date: .abbreviated, time: .omitted)
     }
 } 
