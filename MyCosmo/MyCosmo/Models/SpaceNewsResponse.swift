@@ -21,6 +21,7 @@ struct SpaceNewsArticle: Codable, Identifiable {
 }
 
 enum NewsType: String, CaseIterable {
+    case all = "All"
     case articles = "Articles"
     case blogs = "Blogs"
     case reports = "Reports"
@@ -28,6 +29,7 @@ enum NewsType: String, CaseIterable {
     
     var icon: String {
         switch self {
+        case .all: return "square.grid.2x2.fill"
         case .articles: return "newspaper.fill"
         case .blogs: return "text.book.closed.fill"
         case .reports: return "doc.text.fill"
@@ -37,6 +39,7 @@ enum NewsType: String, CaseIterable {
     
     var color: Color {
         switch self {
+        case .all: return .indigo
         case .articles: return .blue
         case .blogs: return .purple
         case .reports: return .green
@@ -46,6 +49,7 @@ enum NewsType: String, CaseIterable {
     
     var endpoint: String {
         switch self {
+        case .all: return "articles"
         case .articles: return "articles"
         case .blogs: return "blogs"
         case .reports: return "reports"

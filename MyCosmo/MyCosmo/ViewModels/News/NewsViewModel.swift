@@ -5,7 +5,7 @@ import SwiftUI
 class NewsViewModel: ObservableObject {
     @Published var apodData: APODResponse?
     @Published var newsArticles: [SpaceNewsArticle] = []
-    @Published var selectedNewsType: NewsType = .articles
+    @Published var selectedNewsType: NewsType = .all
     @Published var isLoading = false
     @Published var error: Error?
     
@@ -40,7 +40,11 @@ class NewsViewModel: ObservableObject {
     }
     
     func changeNewsType(_ type: NewsType) {
-        selectedNewsType = type
+        if type == selectedNewsType {
+            selectedNewsType = .all
+        } else {
+            selectedNewsType = type
+        }
         Task {
             await fetchNews()
         }
