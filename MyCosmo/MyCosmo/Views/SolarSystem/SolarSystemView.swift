@@ -1,8 +1,10 @@
 import SwiftUI
+import SwiftData
 
 struct SolarSystemView: View {
     @StateObject private var viewModel = SolarSystemViewModel()
     @Environment(\.colorScheme) private var colorScheme
+    @State private var showingInfo = false
     
     private let columns = [
         GridItem(.adaptive(minimum: 170), spacing: 8)
@@ -25,6 +27,73 @@ struct SolarSystemView: View {
                 }
             }
             .navigationTitle("Solar System")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showingInfo = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingInfo) {
+                NavigationStack {
+                    List {
+                        Section {
+                            VStack(spacing: 16) {
+                                // Icon Circle
+                                ZStack {
+                                    Circle()
+                                        .fill(colorScheme == .dark ? Color(.systemGray6) : .white)
+                                        .frame(width: 100, height: 100)
+                                        .shadow(color: .black.opacity(0.1), radius: 10)
+                                    
+                                    Image(systemName: "globe.europe.africa.fill")
+                                        .font(.system(size: 40))
+                                        .foregroundStyle(colorScheme == .dark ? .blue : .indigo)
+                                }
+                                .padding(.top, 16)
+                                
+                                // Title and Subtitle
+                                VStack(spacing: 8) {
+                                    Text("Solar System")
+                                        .font(.title2)
+                                        .fontWeight(.bold)
+                                    
+                                    Text("Explore our solar system's planets with detailed information, fun facts, and beautiful imagery.")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                }
+                                .padding(.bottom, 16)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                        }
+                        
+                        Section("Features") {
+                            InfoSheetRow(symbol: "globe.europe.africa.fill", title: "Planet Cards", description: "Interactive cards with planet images and basic data")
+                            InfoSheetRow(symbol: "text.book.closed.fill", title: "Fun Facts", description: "Interesting facts about each planet")
+                            InfoSheetRow(symbol: "ruler.fill", title: "Physical Data", description: "Detailed physical characteristics and measurements")
+                        }
+                        
+                        Section("Technologies") {
+                            InfoSheetRow(symbol: "swift", title: "Swift Features", description: "SwiftUI, MVVM, Grid layouts, Custom animations")
+                            InfoSheetRow(symbol: "square.stack.3d.up.fill", title: "Data Source", description: "Local dataset with comprehensive planetary data")
+                        }
+                    }
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Done") {
+                                showingInfo = false
+                            }
+                        }
+                    }
+                }
+            }
             .task {
                 if viewModel.planets.isEmpty {
                     await viewModel.fetchPlanets()

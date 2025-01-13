@@ -1,8 +1,10 @@
 import SwiftUI
+import SwiftData
 
 struct NewsView: View {
     @StateObject private var viewModel = NewsViewModel()
     @State private var showingAPOD = false
+    @State private var showingInfo = false
     @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
@@ -36,6 +38,14 @@ struct NewsView: View {
             .navigationTitle("Space News")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showingInfo = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                    }
+                }
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         Task {
@@ -44,6 +54,64 @@ struct NewsView: View {
                         }
                     } label: {
                         Image(systemName: "camera.badge.clock")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingInfo) {
+                NavigationStack {
+                    List {
+                        Section {
+                            VStack(spacing: 16) {
+                                // Icon Circle
+                                ZStack {
+                                    Circle()
+                                        .fill(colorScheme == .dark ? Color(.systemGray6) : .white)
+                                        .frame(width: 100, height: 100)
+                                        .shadow(color: .black.opacity(0.1), radius: 10)
+                                    
+                                    Image(systemName: "newspaper.fill")
+                                        .font(.system(size: 40))
+                                        .foregroundStyle(colorScheme == .dark ? .blue : .indigo)
+                                }
+                                .padding(.top, 16)
+                                
+                                // Title and Subtitle
+                                VStack(spacing: 8) {
+                                    Text("Space News")
+                                        .font(.title2)
+                                        .fontWeight(.bold)
+                                    
+                                    Text("Stay up to date with the latest space news, launches, and discoveries from around the world.")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                }
+                                .padding(.bottom, 16)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                        }
+                        
+                        Section("Features") {
+                            InfoSheetRow(symbol: "newspaper.fill", title: "Space News", description: "Latest articles from SpaceFlightNews API")
+                            InfoSheetRow(symbol: "camera.badge.clock", title: "NASA APOD", description: "NASA's Astronomy Picture of the Day")
+                            InfoSheetRow(symbol: "line.3.horizontal.decrease.circle", title: "News Filters", description: "Filter by articles, blogs, or reports")
+                        }
+                        
+                        Section("Technologies") {
+                            InfoSheetRow(symbol: "swift", title: "Swift Features", description: "Async/await, SwiftUI, MVVM architecture")
+                            InfoSheetRow(symbol: "network", title: "APIs", description: "SpaceFlightNews API, NASA APOD API")
+                        }
+                    }
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Done") {
+                                showingInfo = false
+                            }
+                        }
                     }
                 }
             }

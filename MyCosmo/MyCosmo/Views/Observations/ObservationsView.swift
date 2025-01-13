@@ -11,6 +11,7 @@ struct ObservationsView: View {
     @State private var selectedImportance: ImportanceLevel?
     @State private var selectedPlanet: Planet?
     @State private var showingFilters = false
+    @State private var showingInfo = false
     
     init() {
         let context = try! ModelContainer(for: UserObservation.self).mainContext
@@ -37,6 +38,14 @@ struct ObservationsView: View {
             }
             .navigationTitle("Observations")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showingInfo = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                    }
+                }
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: { viewModel.showingAddSheet = true }) {
                         Label("Add Observation", systemImage: "plus.circle.fill")
@@ -79,6 +88,65 @@ struct ObservationsView: View {
                     } label: {
                         Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
                             .symbolEffect(.bounce, value: hasActiveFilters)
+                    }
+                }
+            }
+            .sheet(isPresented: $showingInfo) {
+                NavigationStack {
+                    List {
+                        Section {
+                            VStack(spacing: 16) {
+                                // Icon Circle
+                                ZStack {
+                                    Circle()
+                                        .fill(colorScheme == .dark ? Color(.systemGray6) : .white)
+                                        .frame(width: 100, height: 100)
+                                        .shadow(color: .black.opacity(0.1), radius: 10)
+                                    
+                                    Image(systemName: "binoculars.fill")
+                                        .font(.system(size: 40))
+                                        .foregroundStyle(colorScheme == .dark ? .blue : .indigo)
+                                }
+                                .padding(.top, 16)
+                                
+                                // Title and Subtitle
+                                VStack(spacing: 8) {
+                                    Text("Observations")
+                                        .font(.title2)
+                                        .fontWeight(.bold)
+                                    
+                                    Text("Record and track your astronomical observations with detailed information, images, and categorization.")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                }
+                                .padding(.bottom, 16)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                        }
+                        
+                        Section("Features") {
+                            InfoSheetRow(symbol: "camera.fill", title: "Photo Gallery", description: "Add multiple photos to each observation")
+                            InfoSheetRow(symbol: "tag.fill", title: "Categories", description: "Organize by type and importance level")
+                            InfoSheetRow(symbol: "line.3.horizontal.decrease.circle", title: "Smart Filters", description: "Filter by planet, category, or importance")
+                        }
+                        
+                        Section("Technologies") {
+                            InfoSheetRow(symbol: "swift", title: "Swift Features", description: "SwiftData, PhotosUI, SwiftUI, MVVM")
+                            InfoSheetRow(symbol: "square.and.arrow.up.fill", title: "Data Storage", description: "Local persistence with SwiftData")
+                            InfoSheetRow(symbol: "photo.stack", title: "Image Handling", description: "PhotosUI integration and image compression")
+                        }
+                    }
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Done") {
+                                showingInfo = false
+                            }
+                        }
                     }
                 }
             }
