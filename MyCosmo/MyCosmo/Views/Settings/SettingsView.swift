@@ -26,21 +26,6 @@ struct SettingsView: View {
                     }
                 }
                 
-                Section("Language") {
-                    HStack {
-                        Label {
-                            Picker("Language", selection: $selectedLanguage) {
-                                ForEach(languages, id: \.self) { language in
-                                    Text(language)
-                                }
-                            }
-                        } icon: {
-                            Image(systemName: "globe")
-                                .foregroundStyle(Color.accentColor)
-                        }
-                    }
-                }
-                
                 Section("About") {
                     NavigationLink {
                         AboutView()
