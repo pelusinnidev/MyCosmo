@@ -24,7 +24,7 @@ MyCosmo is a comprehensive iOS application that brings the wonders of space expl
 ### APIs & Services
 - **Spaceflight News API**: Integration for real-time space news and updates
 - **NASA API**: Access to NASA's vast database of space imagery and information
-- **Solar System API**: Detailed information about planets and celestial bodies
+- **Solar System API**: Still Under Investigation
 
 ## 🏗 Architecture
 - Modern MVVM (Model-View-ViewModel) architecture
