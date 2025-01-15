@@ -6,89 +6,153 @@ struct FeaturesView: View {
     
     private let spacing: CGFloat = 24
     private let horizontalPadding: CGFloat = 24
+    private let features = [
+        OnboardingFeature(
+            title: "Space News",
+            description: "• Daily NASA's Astronomy Picture of the Day\n• Latest space discoveries and missions\n• Breaking news from space agencies\n• Detailed articles about astronomy",
+            systemImage: "newspaper.fill",
+            tint: .indigo
+        ),
+        OnboardingFeature(
+            title: "Solar System",
+            description: "• Explore all planets in our solar system\n• Learn about moons and their characteristics\n• Discover interesting facts and statistics\n• View beautiful space imagery",
+            systemImage: "globe.europe.africa.fill",
+            tint: .indigo
+        ),
+        OnboardingFeature(
+            title: "Personal Log",
+            description: "• Record your astronomical observations\n• Add photos of celestial objects\n• Track observation conditions\n• Note your discoveries and findings",
+            systemImage: "binoculars.fill",
+            tint: .indigo
+        ),
+        OnboardingFeature(
+            title: "Your Experience",
+            description: "• Choose between light and dark mode\n• Customize your app appearance\n• Set your preferred language\n• Personalize your experience",
+            systemImage: "gearshape.fill",
+            tint: .indigo
+        )
+    ]
     
     var body: some View {
         TabView(selection: $selectedFeatureIndex) {
-            ForEach(Array(OnboardingItem.features.enumerated()), id: \.element.id) { index, item in
+            ForEach(Array(features.enumerated()), id: \.element.id) { index, feature in
                 VStack(spacing: spacing) {
                     // Section indicator
-                    Text("Feature \(index + 1) of \(OnboardingItem.features.count)")
+                    Text("\(index + 1) of \(features.count)")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Capsule())
                         .padding(.top, 20)
                     
                     Spacer()
-                        .layoutPriority(1)
+                        .frame(height: 40)
                     
                     // Feature card with enhanced design
                     VStack(spacing: spacing) {
                         ZStack {
                             // Background effects
                             Circle()
-                                .fill(item.tint.opacity(0.2))
+                                .fill(
+                                    LinearGradient(
+                                        colors: [.purple.opacity(0.2), .blue.opacity(0.2)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
                                 .frame(width: 120, height: 120)
                                 .blur(radius: 20)
                             
                             // Decorative rings
                             ForEach(0..<2) { ring in
                                 Circle()
-                                    .strokeBorder(item.tint.opacity(0.1), lineWidth: 1)
+                                    .strokeBorder(
+                                        LinearGradient(
+                                            colors: [.purple.opacity(0.1), .blue.opacity(0.1)],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        ),
+                                        lineWidth: 1
+                                    )
                                     .frame(width: 140 + CGFloat(ring * 30),
                                            height: 140 + CGFloat(ring * 30))
                             }
                             
-                            Image(systemName: item.systemImage)
+                            // Icon with gradient and animation
+                            Image(systemName: feature.systemImage)
                                 .font(.system(size: 60, weight: .light))
-                                .foregroundStyle(.linearGradient(
-                                    colors: [item.tint, item.tint.opacity(0.7)],
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                ))
-                                .symbolEffect(.bounce, options: .repeating.speed(0.5))
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.purple, .blue],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .symbolEffect(.bounce, options: .repeating)
                         }
                         .frame(height: 160)
+                        .frame(maxWidth: .infinity)
                         
                         VStack(spacing: 16) {
-                            Text(item.title)
+                            Text(feature.title)
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .multilineTextAlignment(.center)
                                 .foregroundStyle(Color(.label))
+                                .frame(height: 30)
                             
-                            Text(item.description)
+                            Text(feature.description)
                                 .font(.body)
-                                .multilineTextAlignment(.center)
+                                .multilineTextAlignment(.leading)
                                 .foregroundStyle(Color(.secondaryLabel))
                                 .fixedSize(horizontal: false, vertical: true)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 20)
                         }
                         .padding(.horizontal, 32)
                     }
                     
                     Spacer()
-                        .layoutPriority(1)
                     
-                    Button(action: action) {
-                        Text("Continue")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(height: 50)
-                            .frame(maxWidth: .infinity)
-                            .background(item.tint.gradient)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                    // Continue button
+                    if index == features.count - 1 {
+                        Button(action: action) {
+                            Text("Continue")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(height: 54)
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    LinearGradient(
+                                        colors: [.purple, .blue],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                        }
+                        .padding(.horizontal, horizontalPadding)
+                        .padding(.bottom, 40)
                     }
-                    .padding(.horizontal, horizontalPadding)
-                    .padding(.bottom, 20)
-                    .opacity(index == OnboardingItem.features.count - 1 ? 1 : 0)
-                    .disabled(index != OnboardingItem.features.count - 1)
                 }
                 .tag(index)
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .overlay(alignment: .bottom) {
-            PageControl(numberOfPages: OnboardingItem.features.count,
+            PageControl(numberOfPages: features.count,
                        currentPage: selectedFeatureIndex)
                 .padding(.bottom, 100)
         }
     }
+}
+
+// Feature model
+private struct OnboardingFeature: Identifiable {
+    let id = UUID()
+    let title: String
+    let description: String
+    let systemImage: String
+    let tint: Color
 } 
