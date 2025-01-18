@@ -10,6 +10,7 @@ import SwiftData
 struct MyCosmoApp: App {
     let container: ModelContainer
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage("appearanceMode") private var appearanceMode = 0 // 0: system, 1: light, 2: dark
     
     init() {
         do {
@@ -29,5 +30,14 @@ struct MyCosmoApp: App {
             }
         }
         .modelContainer(container)
+        .preferredColorScheme(colorScheme)
+    }
+    
+    private var colorScheme: ColorScheme? {
+        switch appearanceMode {
+        case 1: return .light
+        case 2: return .dark
+        default: return nil
+        }
     }
 }

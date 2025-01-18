@@ -55,7 +55,6 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
         }
-        .preferredColorScheme(colorScheme)
     }
     
     private var colorScheme: ColorScheme? {
