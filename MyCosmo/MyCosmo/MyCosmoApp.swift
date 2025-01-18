@@ -25,12 +25,13 @@ struct MyCosmoApp: App {
         WindowGroup {
             if !hasCompletedOnboarding {
                 OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+                    .preferredColorScheme(colorScheme)
             } else {
                 MainTabView()
+                    .preferredColorScheme(colorScheme)
             }
         }
         .modelContainer(container)
-        .preferredColorScheme(colorScheme)
     }
     
     private var colorScheme: ColorScheme? {
