@@ -80,9 +80,7 @@ struct NewsView: View {
                 InfoSheet(content: infoContent)
             }
             .sheet(isPresented: $showingAPOD) {
-                if let apodData = viewModel.apodData {
-                    APODDetailView(apodData: apodData)
-                }
+                APODDetailView(apodData: viewModel.apodData, error: viewModel.apodError)
             }
             .overlay {
                 if viewModel.isLoading {

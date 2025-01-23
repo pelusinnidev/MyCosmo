@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 class NewsViewModel: ObservableObject {
     @Published var apodData: APODResponse?
+    @Published var apodError: Error?
     @Published var newsArticles: [SpaceNewsArticle] = []
     @Published var selectedNewsType: NewsType = .all
     @Published var isLoading = false
@@ -20,9 +21,11 @@ class NewsViewModel: ObservableObject {
     func fetchAPOD() async {
         isLoading = true
         do {
+            apodError = nil
             apodData = try await nasaService.fetchAPOD()
         } catch {
-            self.error = error
+            apodError = error
+            apodData = nil
             print("Error fetching APOD: \(error)")
         }
         isLoading = false
@@ -31,6 +34,7 @@ class NewsViewModel: ObservableObject {
     func fetchNews() async {
         isLoading = true
         do {
+            error = nil
             newsArticles = try await spaceNewsService.fetchNews(type: selectedNewsType)
         } catch {
             self.error = error
