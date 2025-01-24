@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "jupiter-marble-pia22946-16x9-1.jpg.jpg",
+      "filename" : "Jupiter_(transparent).png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "jupiter-marble-pia22946-16x9-1.jpg@2x.jpg",
+      "filename" : "Jupiter_(transparent)@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "jupiter-marble-pia22946-16x9-1.jpg@3x.jpg",
+      "filename" : "Jupiter_(transparent)@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "venus-mariner-10-pia23791-fig2-16x9-1.jpg.jpg",
+      "filename" : "3D_Venus.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "venus-mariner-10-pia23791-fig2-16x9-1.jpg@2x.jpg",
+      "filename" : "3D_Venus@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "venus-mariner-10-pia23791-fig2-16x9-1.jpg@3x.jpg",
+      "filename" : "3D_Venus@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
