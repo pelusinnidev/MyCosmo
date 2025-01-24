@@ -267,8 +267,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.24;
-				PRODUCT_BUNDLE_IDENTIFIER = com.pelusinnidev.MyCosmo;
+				MARKETING_VERSION = 0.4.32;
+				PRODUCT_BUNDLE_IDENTIFIER = pelusinnidev.MyCosmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -303,8 +303,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.24;
-				PRODUCT_BUNDLE_IDENTIFIER = com.pelusinnidev.MyCosmo;
+				MARKETING_VERSION = 0.4.32;
+				PRODUCT_BUNDLE_IDENTIFIER = pelusinnidev.MyCosmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
