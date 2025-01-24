@@ -31,22 +31,11 @@ struct ObservationsView: View {
         NavigationStack {
             Group {
                 if filteredObservations.isEmpty {
-                    VStack(spacing: 16) {
-                        Image(systemName: "sparkle.magnifyingglass")
-                            .font(.system(size: 50))
-                            .foregroundStyle(.secondary)
-                        
-                        Text("No observations yet")
-                            .font(.title3)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.secondary)
-                        
+                    ContentUnavailableView {
+                        Label("No Observations", systemImage: "sparkle.magnifyingglass")
+                    } description: {
                         Text("Start recording your astronomical observations")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color(.systemGroupedBackground))
                 } else {
                     List {
                         ForEach(filteredObservations) { observation in
