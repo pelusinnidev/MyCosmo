@@ -29,10 +29,31 @@ struct ObservationsView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(filteredObservations) { observation in
-                    NavigationLink(destination: ObservationDetailView(observation: observation)) {
-                        ObservationRowView(observation: observation)
+            Group {
+                if filteredObservations.isEmpty {
+                    VStack(spacing: 16) {
+                        Image(systemName: "sparkle.magnifyingglass")
+                            .font(.system(size: 50))
+                            .foregroundStyle(.secondary)
+                        
+                        Text("No observations yet")
+                            .font(.title3)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.secondary)
+                        
+                        Text("Start recording your astronomical observations")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(.systemGroupedBackground))
+                } else {
+                    List {
+                        ForEach(filteredObservations) { observation in
+                            NavigationLink(destination: ObservationDetailView(observation: observation)) {
+                                ObservationRowView(observation: observation)
+                            }
+                        }
                     }
                 }
             }
