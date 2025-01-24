@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "saturn-farewell-pia21345-sse-banner-1920x640-1.jpg.jpg",
+      "filename" : "3D_Saturn.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "saturn-farewell-pia21345-sse-banner-1920x640-1.jpg@2x.jpg",
+      "filename" : "3D_Saturn@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "saturn-farewell-pia21345-sse-banner-1920x640-1.jpg@3x.jpg",
+      "filename" : "3D_Saturn@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

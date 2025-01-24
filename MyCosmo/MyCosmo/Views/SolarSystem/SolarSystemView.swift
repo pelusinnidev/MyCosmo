@@ -6,24 +6,37 @@ struct SolarSystemView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var showingInfo = false
     
-    private let columns = [
-        GridItem(.adaptive(minimum: 170), spacing: 8)
-    ]
-    
     var body: some View {
         NavigationStack {
-            ScrollView {
+            List {
                 if viewModel.isLoading && viewModel.planets.isEmpty {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .padding(.top, 40)
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                    .listRowBackground(Color.clear)
                 } else {
-                    LazyVGrid(columns: columns, spacing: 8) {
-                        ForEach(viewModel.planets) { planet in
-                            PlanetCard(planet: planet, viewModel: viewModel)
+                    ForEach(viewModel.planets) { planet in
+                        NavigationLink(destination: PlanetDetailView(planet: planet)) {
+                            HStack(spacing: 16) {
+                                Image(planet.englishName)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 60, height: 60)
+                                    .clipShape(Circle())
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(planet.englishName)
+                                        .font(.headline)
+                                    Text("\(Int(planet.avgTemp - 273.15))°C")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .padding(.vertical, 4)
                         }
                     }
-                    .padding(8)
                 }
             }
             .navigationTitle("Solar System")
@@ -80,7 +93,7 @@ struct SolarSystemView: View {
                         }
                         
                         Section("Technologies") {
-                            InfoSheetRow(symbol: "swift", title: "Swift Features", description: "SwiftUI, MVVM, Grid layouts, Custom animations")
+                            InfoSheetRow(symbol: "swift", title: "Swift Features", description: "SwiftUI, MVVM, List layouts, Custom animations")
                             InfoSheetRow(symbol: "square.stack.3d.up.fill", title: "Data Source", description: "Local dataset with comprehensive planetary data")
                         }
                     }
@@ -98,9 +111,6 @@ struct SolarSystemView: View {
                 if viewModel.planets.isEmpty {
                     await viewModel.fetchPlanets()
                 }
-            }
-            .sheet(item: $viewModel.selectedPlanet) { planet in
-                PlanetDetailView(planet: planet)
             }
             .alert("Error", isPresented: .constant(viewModel.error != nil)) {
                 Button("OK") {
@@ -160,219 +170,6 @@ struct PlanetCard: View {
             .shadow(radius: 3)
         }
         .buttonStyle(.plain)
-    }
-}
-
-struct PlanetDetailView: View {
-    let planet: PlanetData
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.colorScheme) private var colorScheme
-    @State private var currentFact: String
-    
-    init(planet: PlanetData) {
-        self.planet = planet
-        self._currentFact = State(initialValue: planet.randomFunFact)
-    }
-    
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 0) {
-                    // Header Image
-                    GeometryReader { geo in
-                        Image(planet.englishName)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: geo.size.width, height: geo.size.height)
-                            .clipped()
-                            .overlay {
-                                LinearGradient(
-                                    colors: [
-                                        .clear,
-                                        .clear,
-                                        colorScheme == .dark ? .black.opacity(0.8) : .white.opacity(0.8)
-                                    ],
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                )
-                            }
-                    }
-                    .frame(height: 250)
-                    
-                    // Content
-                    VStack(spacing: 24) {
-                        // Planet Name and Type
-                        VStack(spacing: 4) {
-                            Text(planet.englishName)
-                                .font(.title)
-                                .fontWeight(.bold)
-                            Text(planet.bodyType.capitalized)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                        .padding(.top)
-                        
-                        // Fun Fact Card with improved animation
-                        VStack(spacing: 12) {
-                            HStack {
-                                Text("Did you know?")
-                                    .font(.title3)
-                                    .fontWeight(.bold)
-                                Spacer()
-                                Button {
-                                    withAnimation(.easeInOut) {
-                                        currentFact = planet.randomFunFact
-                                    }
-                                } label: {
-                                    Image(systemName: "arrow.clockwise.circle.fill")
-                                        .font(.title2)
-                                        .foregroundStyle(colorScheme == .dark ? .blue : .indigo)
-                                        .symbolEffect(.bounce, value: currentFact)
-                                }
-                            }
-                            
-                            Text(currentFact)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .id(currentFact) // Para mejor animación
-                                .transition(.opacity.combined(with: .slide))
-                        }
-                        .padding()
-                        .background(colorScheme == .dark ? Color(.systemGray6) : .white)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .shadow(radius: colorScheme == .dark ? 1 : 2)
-                        .padding(.horizontal)
-                        
-                        // Quick Facts
-                        VStack(spacing: 16) {
-                            Text("Quick Facts")
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            HStack(spacing: 12) {
-                                if let moons = planet.moons {
-                                    QuickFactView(
-                                        icon: "moon.stars.fill",
-                                        value: "\(moons.count)",
-                                        label: "Moons"
-                                    )
-                                }
-                                
-                                QuickFactView(
-                                    icon: "thermometer",
-                                    value: "\(Int(planet.avgTemp - 273.15))°C",
-                                    label: "Avg Temp"
-                                )
-                                
-                                QuickFactView(
-                                    icon: "ruler.fill",
-                                    value: "\(Int(planet.meanRadius))",
-                                    label: "Radius (km)"
-                                )
-                            }
-                        }
-                        .padding(.horizontal)
-                        
-                        // Detailed Info Sections
-                        Group {
-                            // Physical Characteristics
-                            InfoCard(title: "Physical Characteristics") {
-                                InfoRow(title: "Mean Radius", value: planet.formattedRadius)
-                                InfoRow(title: "Gravity", value: planet.formattedGravity)
-                                InfoRow(title: "Mass", value: planet.formattedMass)
-                                InfoRow(title: "Average Temperature", value: planet.formattedTemperature)
-                                InfoRow(title: "Density", value: "\(Int(planet.density)) kg/m³")
-                            }
-                            
-                            // Orbital Characteristics
-                            InfoCard(title: "Orbital Characteristics") {
-                                InfoRow(title: "Axial Tilt", value: "\(Int(planet.axialTilt))°")
-                                InfoRow(title: "Main Anomaly", value: "\(Int(planet.mainAnomaly))°")
-                                InfoRow(title: "Argument of Periapsis", value: "\(Int(planet.argPeriapsis))°")
-                            }
-                            
-                            // Discovery Information
-                            if let discoveredBy = planet.discoveredBy,
-                               let discoveryDate = planet.discoveryDate {
-                                InfoCard(title: "Discovery") {
-                                    InfoRow(title: "Discovered By", value: discoveredBy)
-                                    InfoRow(title: "Discovery Date", value: discoveryDate)
-                                }
-                            }
-                        }
-                    }
-                    .padding(.bottom)
-                }
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .ignoresSafeArea(.all, edges: .top)
-        }
-        .presentationDragIndicator(.visible)
-        .interactiveDismissDisabled(false)
-    }
-}
-
-struct QuickFactView: View {
-    let icon: String
-    let value: String
-    let label: String
-    @Environment(\.colorScheme) private var colorScheme
-    
-    var body: some View {
-        VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundStyle(colorScheme == .dark ? .blue : .indigo)
-            Text(value)
-                .font(.headline)
-            Text(label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(colorScheme == .dark ? Color(.systemGray6) : .white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(radius: colorScheme == .dark ? 1 : 2)
-    }
-}
-
-struct InfoCard<Content: View>: View {
-    let title: String
-    @ViewBuilder let content: () -> Content
-    @Environment(\.colorScheme) private var colorScheme
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(title)
-                .font(.title3)
-                .fontWeight(.bold)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-            
-            content()
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(colorScheme == .dark ? Color(.systemGray6) : .white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(radius: colorScheme == .dark ? 1 : 2)
-        .padding(.horizontal)
-    }
-}
-
-struct InfoRow: View {
-    let title: String
-    let value: String
-    
-    var body: some View {
-        HStack {
-            Text(title)
-                .foregroundStyle(.secondary)
-            Spacer()
-            Text(value)
-                .fontWeight(.medium)
-        }
     }
 }
 

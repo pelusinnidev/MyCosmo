@@ -23,18 +23,11 @@ struct AboutView: View {
                 .padding(.vertical, 4)
             }
             
-            Section("Project") {
-                InfoSheetRow(symbol: "person.2.fill",
-                           title: "Creators",
-                           description: "Pol Hernàndez & Adrià Sanchez")
-                
-                InfoSheetRow(symbol: "building.columns.fill",
-                           title: "School",
-                           description: "La Salle Gràcia")
-                
-                InfoSheetRow(symbol: "doc.text.fill",
-                           title: "Course",
-                           description: "DAM2 - M08")
+            Section("About") {
+                Text("MyCosmo started as a simple class project, but as we invested more time and effort, we discovered its potential and the passion we could bring to it. While there are many astronomy apps available, our vision is different. We've made this project open source on GitHub, allowing others to see how it's built and hopefully inspire them to create their own apps. While future developments might lead to a closed version, our current intention is to keep it open and accessible to the community. We hope you enjoy using MyCosmo as much as we enjoyed creating it.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, 4)
             }
             
             Section("Technologies") {

@@ -14,54 +14,87 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("Appearance") {
+                /*
+                    // Profile Section
+                    Section {
+                        HStack(spacing: 16) {
+                            Circle()
+                                .fill(Color.accentColor.gradient)
+                                .frame(width: 60, height: 60)
+                                .overlay {
+                                    Image(systemName: "person.crop.circle.fill")
+                                        .font(.system(size: 60))
+                                        .foregroundStyle(.ultraThinMaterial)
+                                }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("MyCosmo")
+                                    .font(.headline)
+                                Text("Your Personal Space Explorer")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 6)
+                    }
+                */
+                
+                // Appearance Section
+                Section {
                     HStack {
                         Label {
-                            Picker("Theme", selection: $appearanceMode) {
-                                ForEach(0..<appearanceModes.count, id: \.self) { index in
-                                    Text(appearanceModes[index])
-                                }
-                            }
+                            Text("Theme")
                         } icon: {
                             Image(systemName: appearanceMode == 0 ? "circle.lefthalf.filled" : 
-                                              appearanceMode == 1 ? "sun.max.fill" : "moon.stars.fill")
+                                          appearanceMode == 1 ? "sun.max.fill" : "moon.stars.fill")
                                 .foregroundStyle(Color.accentColor)
+                                .frame(width: 26)
                         }
+                        
+                        Spacer()
+                        
+                        Picker("", selection: $appearanceMode) {
+                            ForEach(0..<appearanceModes.count, id: \.self) { index in
+                                Text(appearanceModes[index])
+                            }
+                        }
+                        .labelsHidden()
                     }
-                }
-                
-                Section {
-                    VStack(spacing: 16) {
+                    
+                    /*
                         HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Space News API")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
+                            Label {
+                                Text("Language")
+                            } icon: {
+                                Image(systemName: "globe")
+                                    .foregroundStyle(Color.accentColor)
+                                    .frame(width: 26)
                             }
                             
                             Spacer()
                             
-                            HStack(spacing: 4) {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(.green)
-                                Text("Active")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                            Picker("", selection: $selectedLanguage) {
+                                ForEach(languages, id: \.self) { language in
+                                    Text(language)
+                                }
                             }
+                            .labelsHidden()
                         }
-                        .padding(.vertical, 4)
-                        
-                        Divider()
-                        
-                        Button {
-                            showingNASASettings = true
-                        } label: {
-                            HStack {
+                     */
+                } header: {
+                    Text("Appearance")
+                }
+                
+                // API Settings Section
+                Section {
+                    Button {
+                        showingNASASettings = true
+                    } label: {
+                        HStack {
+                            Label {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("NASA APOD API")
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                    
+                                        .foregroundStyle(.primary)
                                     if !nasaApiKey.isEmpty {
                                         if let remaining = remainingRequests {
                                             Text("\(remaining) requests remaining")
@@ -70,60 +103,96 @@ struct SettingsView: View {
                                         }
                                     }
                                 }
-                                
-                                Spacer()
-                                
-                                HStack(spacing: 4) {
-                                    if nasaApiKey.isEmpty {
-                                        Image(systemName: "exclamationmark.circle.fill")
-                                            .foregroundStyle(.orange)
-                                        Text("Required")
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    } else {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .foregroundStyle(.green)
-                                        Text("Active")
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    }
+                            } icon: {
+                                Image(systemName: "key.fill")
+                                    .foregroundStyle(Color.accentColor)
+                                    .frame(width: 26)
+                            }
+                            
+                            Spacer()
+                            
+                            HStack(spacing: 4) {
+                                if nasaApiKey.isEmpty {
+                                    Image(systemName: "exclamationmark.circle.fill")
+                                        .foregroundStyle(.orange)
+                                    Text("Required")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                } else {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.green)
+                                    Text("Active")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
                                 }
                             }
                         }
-                        .foregroundStyle(.primary)
-                        .padding(.vertical, 4)
+                    }
+                    
+                    Label {
+                        HStack {
+                            Text("Space News API")
+                            Spacer()
+                            HStack(spacing: 4) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.green)
+                                Text("Active")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    } icon: {
+                        Image(systemName: "newspaper.fill")
+                            .foregroundStyle(Color.accentColor)
+                            .frame(width: 26)
                     }
                 } header: {
-                    Text("API Keys")
+                    Text("API Settings")
                 } footer: {
                     Text("API keys are required for certain features of the app")
                 }
                 
-                Section("About") {
+                // About Section
+                Section {
                     NavigationLink {
                         AboutView()
                     } label: {
-                        InfoSheetRow(symbol: "info.circle.fill",
-                                   title: "About",
-                                   description: "Information about the project")
-                            .foregroundStyle(Color.primary)
+                        Label {
+                            Text("About")
+                        } icon: {
+                            Image(systemName: "info.circle.fill")
+                                .foregroundStyle(Color.accentColor)
+                                .frame(width: 26)
+                        }
                     }
                     
                     NavigationLink {
                         AcknowledgmentsView()
                     } label: {
-                        InfoSheetRow(symbol: "heart.fill",
-                                   title: "Acknowledgments",
-                                   description: "APIs and resources used")
-                            .foregroundStyle(Color.primary)
+                        Label {
+                            Text("Acknowledgments")
+                        } icon: {
+                            Image(systemName: "heart.fill")
+                                .foregroundStyle(Color.accentColor)
+                                .frame(width: 26)
+                        }
                     }
                 }
                 
-                Section("App Information") {
-                    InfoSheetRow(symbol: "number.circle.fill",
-                               title: "Version",
-                               description: "\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""))")
-                        .foregroundStyle(Color.primary)
+                // App Info Section
+                Section {
+                    Label {
+                        HStack {
+                            Text("Version")
+                            Spacer()
+                            Text("\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""))")
+                                .foregroundStyle(.secondary)
+                        }
+                    } icon: {
+                        Image(systemName: "number.circle.fill")
+                            .foregroundStyle(Color.accentColor)
+                            .frame(width: 26)
+                    }
                 }
             }
             .navigationTitle("Settings")

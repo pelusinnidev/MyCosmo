@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "blue-marble-apollo-17-16x9-1.jpg.jpg",
+      "filename" : "Earth_Western_Hemisphere_transparent_background.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "blue-marble-apollo-17-16x9-1.jpg@2x.jpg",
+      "filename" : "Earth_Western_Hemisphere_transparent_background@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "blue-marble-apollo-17-16x9-1.jpg@3x.jpg",
+      "filename" : "Earth_Western_Hemisphere_transparent_background@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

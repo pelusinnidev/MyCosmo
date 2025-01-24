@@ -16,22 +16,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Be your universe" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="Kxa-wp-Rau">
-                                <rect key="frame" x="128" y="299" width="147" height="24"/>
-                                <fontDescription key="fontDescription" type="italicSystem" pointSize="20"/>
-                                <color key="textColor" systemColor="systemPurpleColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppIconResource" translatesAutoresizingMaskIntoConstraints="NO" id="j5k-mM-qys">
-                                <rect key="frame" x="96.666666666666686" y="318" width="209" height="212"/>
+                                <rect key="frame" x="123" y="321" width="157" height="164"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="212" id="8Hf-gf-abc"/>
-                                    <constraint firstAttribute="width" constant="209" id="Ygh-df-xyz"/>
+                                    <constraint firstAttribute="height" constant="164" id="8Hf-gf-abc"/>
+                                    <constraint firstAttribute="width" constant="157" id="Ygh-df-xyz"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MyCosmo" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Yh-RWb">
-                                <rect key="frame" x="102.33333333333333" y="538" width="197.33333333333337" height="50.333333333333371"/>
+                                <rect key="frame" x="103" y="504" width="197.33333333333337" height="50.333333333333371"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="42"/>
                                 <color key="textColor" systemColor="systemPurpleColor"/>
                                 <nil key="highlightedColor"/>
@@ -40,10 +34,8 @@
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <constraints>
                             <constraint firstItem="j5k-mM-qys" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Kjm-h8-123"/>
-                            <constraint firstItem="j5k-mM-qys" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-13" id="Pqr-s9-456"/>
-                            <constraint firstItem="j5k-mM-qys" firstAttribute="top" secondItem="Kxa-wp-Rau" secondAttribute="bottom" constant="-5" id="def-34-567"/>
-                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="top" secondItem="j5k-mM-qys" secondAttribute="bottom" constant="8" id="ghi-78-901"/>
-                            <constraint firstItem="Kxa-wp-Rau" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="0.5" id="klm-90-123"/>
+                            <constraint firstItem="j5k-mM-qys" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-34" id="Pqr-s9-456"/>
+                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="top" secondItem="j5k-mM-qys" secondAttribute="bottom" constant="19" id="ghi-78-901"/>
                             <constraint firstItem="GJd-Yh-RWb" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="qrs-67-890"/>
                         </constraints>
                     </view>
@@ -54,7 +46,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="AppIconResource" width="443.33334350585938" height="443.33334350585938"/>
+        <image name="AppIconResource" width="341.33334350585938" height="341.33334350585938"/>
         <systemColor name="systemPurpleColor">
             <color red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

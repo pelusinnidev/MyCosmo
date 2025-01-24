@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "uranus-pia18182-16x9-1.jpg.jpg",
+      "filename" : "Uranus2-transparent.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "uranus-pia18182-16x9-1.jpg@2x.jpg",
+      "filename" : "Uranus2-transparent@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "uranus-pia18182-16x9-1.jpg@3x.jpg",
+      "filename" : "Uranus2-transparent@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

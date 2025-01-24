@@ -29,10 +29,20 @@ struct ObservationsView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(filteredObservations) { observation in
-                    NavigationLink(destination: ObservationDetailView(observation: observation)) {
-                        ObservationRowView(observation: observation)
+            Group {
+                if filteredObservations.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Observations", systemImage: "sparkle.magnifyingglass")
+                    } description: {
+                        Text("Start recording your astronomical observations")
+                    }
+                } else {
+                    List {
+                        ForEach(filteredObservations) { observation in
+                            NavigationLink(destination: ObservationDetailView(observation: observation)) {
+                                ObservationRowView(observation: observation)
+                            }
+                        }
                     }
                 }
             }
