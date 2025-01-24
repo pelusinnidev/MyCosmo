@@ -2,95 +2,40 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
-    @State private var currentPage: OnboardingPage = .welcome
-    @State private var pageIndex = 0
-    
-    private let transition: AnyTransition = .asymmetric(
-        insertion: .move(edge: .trailing).combined(with: .opacity),
-        removal: .move(edge: .leading).combined(with: .opacity)
-    )
+    @State private var currentPage = 0
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Color(.systemBackground)
-                    .ignoresSafeArea()
-                
-                TabView(selection: $pageIndex) {
-                    // Welcome
-                    WelcomeView {
-                        withAnimation {
-                            pageIndex = 1
-                            currentPage = .features
-                        }
-                    }
-                    .tag(0)
-                    
-                    // Features
-                    Group {
-                        // News
-                        OnboardingFeatureView(
-                            title: "Stay Updated",
-                            subtitle: "Space News & Daily Astronomy",
-                            description: "• Latest space news and discoveries\n• NASA's Astronomy Picture of the Day\n• Interactive news filtering\n• Rich media content",
-                            systemImage: "newspaper.fill",
-                            tint: .blue,
-                            buttonTitle: "Next",
-                            action: { withAnimation { pageIndex = 2 } }
-                        )
-                        .tag(1)
-                        
-                        // Solar System
-                        OnboardingFeatureView(
-                            title: "Explore Space",
-                            subtitle: "Interactive Solar System",
-                            description: "• Detailed planet information\n• Beautiful planetary imagery\n• Physical characteristics\n• Interesting facts",
-                            systemImage: "globe.europe.africa.fill",
-                            tint: .purple,
-                            buttonTitle: "Next",
-                            action: { withAnimation { pageIndex = 3 } }
-                        )
-                        .tag(2)
-                        
-                        // Observations
-                        OnboardingFeatureView(
-                            title: "Document",
-                            subtitle: "Personal Observations",
-                            description: "• Record astronomical observations\n• Add multiple photos\n• Organize by categories\n• Filter and search",
-                            systemImage: "binoculars.fill",
-                            tint: .indigo,
-                            buttonTitle: "Next",
-                            action: { withAnimation { 
-                                pageIndex = 4
-                                currentPage = .thanks
-                            } }
-                        )
-                        .tag(3)
-                    }
-                    
-                    // Get Started
-                    ThanksView {
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                colors: [
+                    Color(red: 13/255, green: 15/255, blue: 44/255),
+                    Color(red: 26/255, green: 30/255, blue: 88/255)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+            
+            // Content
+            Group {
+                switch currentPage {
+                case 0:
+                    WelcomeView(nextPage: { currentPage = 1 })
+                case 1:
+                    FeaturesView(nextPage: { currentPage = 2 })
+                case 2:
+                    ThanksView(completeOnboarding: {
                         withAnimation {
                             hasCompletedOnboarding = true
                         }
-                    }
-                    .tag(4)
-                }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .animation(.spring(), value: pageIndex)
-                
-                // Custom Page Control
-                VStack {
-                    Spacer()
-                    if pageIndex < 4 {
-                        PageControl(
-                            numberOfPages: 4,
-                            currentPage: pageIndex
-                        )
-                        .padding(.bottom, 40)
-                    }
+                    })
+                default:
+                    EmptyView()
                 }
             }
+            .transition(.opacity)
         }
+        .preferredColorScheme(.dark)
     }
 } 

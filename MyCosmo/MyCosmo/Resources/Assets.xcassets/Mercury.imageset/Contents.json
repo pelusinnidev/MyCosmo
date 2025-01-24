@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "pia15162-mercury-basins-messenger-16x9-1.jpg.jpg",
+      "filename" : "3D_Mercury.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "pia15162-mercury-basins-messenger-16x9-1.jpg@2x.jpg",
+      "filename" : "3D_Mercury@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "pia15162-mercury-basins-messenger-16x9-1.jpg@3x.jpg",
+      "filename" : "3D_Mercury@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

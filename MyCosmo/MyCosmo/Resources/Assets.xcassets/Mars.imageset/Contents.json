@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "mars-full-globe-16x9-1.jpg.jpg",
+      "filename" : "Mars_(16716283421)_-_Transparent_background.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "mars-full-globe-16x9-1.jpg@2x.jpg",
+      "filename" : "Mars_(16716283421)_-_Transparent_background@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "mars-full-globe-16x9-1.jpg@3x.jpg",
+      "filename" : "Mars_(16716283421)_-_Transparent_background@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

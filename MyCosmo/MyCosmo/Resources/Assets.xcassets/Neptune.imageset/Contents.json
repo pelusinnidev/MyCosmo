@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "pia01492-neptune-full-disk-16x9-1.jpg.jpg",
+      "filename" : "Neptune_cutout.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "pia01492-neptune-full-disk-16x9-1.jpg@2x.jpg",
+      "filename" : "Neptune_cutout@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "pia01492-neptune-full-disk-16x9-1.jpg@3x.jpg",
+      "filename" : "Neptune_cutout@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
