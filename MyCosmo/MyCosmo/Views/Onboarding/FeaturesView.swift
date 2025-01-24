@@ -2,44 +2,30 @@ import SwiftUI
 
 struct FeaturesView: View {
     let nextPage: () -> Void
-    @State private var selectedFeature = 0
+    @State private var isAnimated = false
     
     private let features = [
-        FeatureItem(
-            title: "Space News",
-            description: "Stay updated with the latest astronomical discoveries and space exploration news",
-            icon: "newspaper.fill",
-            color: Color(red: 0.2, green: 0.6, blue: 1.0)
-        ),
-        FeatureItem(
-            title: "Solar System",
-            description: "Explore detailed information about planets, moons, and other celestial bodies",
-            icon: "globe.americas.fill",
-            color: Color(red: 0.6, green: 0.2, blue: 1.0)
-        ),
-        FeatureItem(
-            title: "Observations",
-            description: "Document and track your astronomical observations with photos and notes",
-            icon: "binoculars.fill",
-            color: Color(red: 0.2, green: 0.8, blue: 0.8)
-        )
+        Feature(title: "Space News", icon: "newspaper.fill", color: .blue),
+        Feature(title: "Solar System", icon: "globe.americas.fill", color: .purple),
+        Feature(title: "Observations", icon: "binoculars.fill", color: .teal)
     ]
     
     var body: some View {
-        VStack(spacing: 32) {
-            Text("Discover Features")
+        VStack(spacing: 40) {
+            Text("Key Features")
                 .font(.system(size: 32, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
                 .padding(.top, 60)
+                .opacity(isAnimated ? 1 : 0)
             
-            TabView(selection: $selectedFeature) {
-                ForEach(0..<features.count, id: \.self) { index in
-                    FeatureCard(feature: features[index])
-                        .tag(index)
+            VStack(spacing: 24) {
+                ForEach(features) { feature in
+                    FeatureRow(feature: feature)
+                        .opacity(isAnimated ? 1 : 0)
+                        .offset(x: isAnimated ? 0 : -50)
                 }
             }
-            .tabViewStyle(.page)
-            .frame(height: 400)
+            .padding(.horizontal, 24)
             
             Spacer()
             
@@ -51,64 +37,47 @@ struct FeaturesView: View {
                     .frame(height: 56)
                     .background(Color.white)
                     .cornerRadius(16)
-                    .shadow(color: .white.opacity(0.2), radius: 8, x: 0, y: 4)
             }
             .padding(.horizontal, 40)
-            .padding(.bottom, 60)
+            .padding(.bottom, 48)
+            .opacity(isAnimated ? 1 : 0)
+        }
+        .onAppear {
+            withAnimation(.easeOut(duration: 0.8)) {
+                isAnimated = true
+            }
         }
     }
 }
 
-struct FeatureItem {
+struct Feature: Identifiable {
+    let id = UUID()
     let title: String
-    let description: String
     let icon: String
     let color: Color
 }
 
-struct FeatureCard: View {
-    let feature: FeatureItem
-    @State private var isAnimating = false
+struct FeatureRow: View {
+    let feature: Feature
     
     var body: some View {
-        VStack(spacing: 24) {
+        HStack(spacing: 20) {
             Image(systemName: feature.icon)
-                .font(.system(size: 60))
+                .font(.system(size: 30))
                 .foregroundStyle(feature.color)
-                .symbolEffect(.bounce, options: .repeating)
-                .padding(.top, 40)
-            
-            VStack(spacing: 16) {
-                Text(feature.title)
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                
-                Text(feature.description)
-                    .font(.body)
-                    .foregroundColor(.white.opacity(0.8))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: 24)
-                .fill(Color.black.opacity(0.3))
+                .frame(width: 60, height: 60)
                 .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 24))
-        )
-        .padding(.horizontal, 20)
-        .rotation3DEffect(
-            .degrees(isAnimating ? 0 : -10),
-            axis: (x: 1, y: 0, z: 0)
-        )
-        .offset(y: isAnimating ? 0 : 50)
-        .opacity(isAnimating ? 1 : 0)
-        .onAppear {
-            withAnimation(.spring(duration: 0.8)) {
-                isAnimating = true
-            }
+                .clipShape(Circle())
+            
+            Text(feature.title)
+                .font(.title3)
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+            
+            Spacer()
         }
+        .padding(16)
+        .background(Color.white.opacity(0.1))
+        .cornerRadius(16)
     }
 } 

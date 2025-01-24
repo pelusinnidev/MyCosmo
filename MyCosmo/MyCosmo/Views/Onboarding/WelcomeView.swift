@@ -2,37 +2,36 @@ import SwiftUI
 
 struct WelcomeView: View {
     let nextPage: () -> Void
-    @State private var titleOpacity = 0.0
-    @State private var subtitleOpacity = 0.0
-    @State private var buttonOpacity = 0.0
+    @State private var isAnimated = false
     
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 40) {
             Spacer()
             
             // App Icon
-            Image(systemName: "sparkles.square.filled.on.square")
-                .font(.system(size: 80))
-                .foregroundStyle(.white)
-                .symbolEffect(.bounce, options: .repeating)
+            Image("AppIconResource")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 120)
+                .opacity(isAnimated ? 1 : 0)
             
-            // Title
+            // Title and Subtitle
             VStack(spacing: 16) {
                 Text("MyCosmo")
                     .font(.system(size: 44, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
-                    .opacity(titleOpacity)
                 
-                Text("Your Personal Gateway\nto the Universe")
+                Text("Be your universe")
                     .font(.title2)
+                    .italic()
                     .foregroundColor(.white.opacity(0.8))
-                    .multilineTextAlignment(.center)
-                    .opacity(subtitleOpacity)
             }
+            .opacity(isAnimated ? 1 : 0)
+            .offset(y: isAnimated ? 0 : 20)
             
             Spacer()
             
-            // Start Button
+            // Button
             Button(action: nextPage) {
                 Text("Begin Your Journey")
                     .font(.headline)
@@ -41,40 +40,15 @@ struct WelcomeView: View {
                     .frame(height: 56)
                     .background(Color.white)
                     .cornerRadius(16)
-                    .shadow(color: .white.opacity(0.2), radius: 8, x: 0, y: 4)
             }
             .padding(.horizontal, 40)
-            .opacity(buttonOpacity)
+            .padding(.bottom, 48)
+            .opacity(isAnimated ? 1 : 0)
         }
-        .padding(.vertical, 60)
         .onAppear {
-            withAnimation(.easeOut(duration: 0.8).delay(0.2)) {
-                titleOpacity = 1
+            withAnimation(.easeOut(duration: 0.8)) {
+                isAnimated = true
             }
-            withAnimation(.easeOut(duration: 0.8).delay(0.4)) {
-                subtitleOpacity = 1
-            }
-            withAnimation(.easeOut(duration: 0.8).delay(0.6)) {
-                buttonOpacity = 1
-            }
-        }
-    }
-}
-
-// Feature Icon Component
-struct FeatureIcon: View {
-    let name: String
-    let color: Color
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(.ultraThinMaterial)
-                .frame(width: 60, height: 60)
-            
-            Image(systemName: name)
-                .font(.system(size: 24, weight: .semibold))
-                .foregroundStyle(color)
         }
     }
 } 
