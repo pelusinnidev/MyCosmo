@@ -3,6 +3,7 @@ import SwiftUI
 struct FeaturesView: View {
     let nextPage: () -> Void
     @State private var isAnimated = false
+    @State private var selectedFeatureId: UUID?
     
     private let features = [
         Feature(title: "Space News", 
@@ -29,7 +30,7 @@ struct FeaturesView: View {
             
             VStack(spacing: 24) {
                 ForEach(features) { feature in
-                    FeatureRow(feature: feature)
+                    FeatureRow(feature: feature, selectedFeatureId: $selectedFeatureId)
                         .opacity(isAnimated ? 1 : 0)
                         .offset(x: isAnimated ? 0 : -50)
                 }
@@ -69,13 +70,17 @@ struct Feature: Identifiable {
 
 struct FeatureRow: View {
     let feature: Feature
-    @State private var isExpanded = false
+    @Binding var selectedFeatureId: UUID?
+    
+    private var isExpanded: Bool {
+        selectedFeatureId == feature.id
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Button(action: {
                 withAnimation(.spring()) {
-                    isExpanded.toggle()
+                    selectedFeatureId = isExpanded ? nil : feature.id
                 }
             }) {
                 HStack(spacing: 20) {

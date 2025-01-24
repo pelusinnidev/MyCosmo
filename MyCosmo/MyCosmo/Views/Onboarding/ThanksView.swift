@@ -9,7 +9,7 @@ struct ThanksView: View {
             Spacer()
             
             // Star Icon
-            Image(systemName: "star.fill")
+            Image(systemName: "sparkles")
                 .font(.system(size: 80))
                 .foregroundStyle(.white)
                 .opacity(isAnimated ? 1 : 0)
@@ -30,32 +30,41 @@ struct ThanksView: View {
             .opacity(isAnimated ? 1 : 0)
             .offset(y: isAnimated ? 0 : 20)
             
-            Spacer()
-            
             // API Credits
-            VStack(spacing: 8) {
+            VStack(spacing: 12) {
                 Text("Powered by")
                     .font(.footnote)
                     .foregroundColor(.white.opacity(0.6))
                 
                 HStack(spacing: 16) {
-                    Text("NASA APOD API")
-                        .font(.caption)
-                        .foregroundColor(.white.opacity(0.8))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Color.white.opacity(0.1))
-                        .cornerRadius(8)
+                    HStack(spacing: 8) {
+                        Image(systemName: "photo.fill")
+                            .font(.system(size: 14))
+                            .foregroundColor(.orange)
+                        Text("NASA APOD")
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color.white.opacity(0.1))
+                    .cornerRadius(12)
                     
-                    Text("NewsAPI")
-                        .font(.caption)
-                        .foregroundColor(.white.opacity(0.8))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Color.white.opacity(0.1))
-                        .cornerRadius(8)
+                    HStack(spacing: 8) {
+                        Image(systemName: "newspaper.fill")
+                            .font(.system(size: 14))
+                            .foregroundColor(.blue)
+                        Text("NewsAPI")
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color.white.opacity(0.1))
+                    .cornerRadius(12)
                 }
             }
+            .padding(.horizontal)
             .padding(.bottom, 32)
             .opacity(isAnimated ? 1 : 0)
             
