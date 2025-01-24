@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "MyCosmoLogoCircle.png",
+      "filename" : "globe_book_1000dp_E8EAED_FILL0_wght400_GRAD0_opsz48.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "MyCosmoLogoCircle@2x.png",
+      "filename" : "globe_book_1000dp_E8EAED_FILL0_wght400_GRAD0_opsz48@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "MyCosmoLogoCircle@3x.png",
+      "filename" : "globe_book_1000dp_E8EAED_FILL0_wght400_GRAD0_opsz48@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
