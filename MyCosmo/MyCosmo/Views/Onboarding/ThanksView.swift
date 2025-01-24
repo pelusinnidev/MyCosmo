@@ -32,6 +32,35 @@ struct ThanksView: View {
             
             Spacer()
             
+            // API Credits
+            VStack(spacing: 8) {
+                Text("Powered by")
+                    .font(.footnote)
+                    .foregroundColor(.white.opacity(0.6))
+                
+                HStack(spacing: 16) {
+                    Text("NASA APOD API")
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Color.white.opacity(0.1))
+                        .cornerRadius(8)
+                    
+                    Text("NewsAPI")
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Color.white.opacity(0.1))
+                        .cornerRadius(8)
+                }
+            }
+            .padding(.bottom, 32)
+            .opacity(isAnimated ? 1 : 0)
+            
+            Spacer()
+            
             // Start Button
             Button(action: completeOnboarding) {
                 Text("Start Exploring")
@@ -43,7 +72,7 @@ struct ThanksView: View {
                     .cornerRadius(16)
             }
             .padding(.horizontal, 40)
-            .padding(.bottom, 48)
+            .padding(.bottom, 24)
             .opacity(isAnimated ? 1 : 0)
         }
         .onAppear {

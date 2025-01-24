@@ -5,14 +5,23 @@ struct FeaturesView: View {
     @State private var isAnimated = false
     
     private let features = [
-        Feature(title: "Space News", icon: "newspaper.fill", color: .blue),
-        Feature(title: "Solar System", icon: "globe.americas.fill", color: .purple),
-        Feature(title: "Observations", icon: "binoculars.fill", color: .teal)
+        Feature(title: "Space News", 
+               icon: "newspaper.fill", 
+               color: .blue,
+               description: "Stay updated with the latest astronomy news and NASA's Astronomy Picture of the Day"),
+        Feature(title: "Solar System", 
+               icon: "globe.americas.fill", 
+               color: .purple,
+               description: "Explore detailed information about planets, moons, and other objects in our Solar System"),
+        Feature(title: "Observations", 
+               icon: "binoculars.fill", 
+               color: .teal,
+               description: "Record and track your astronomical observations and discoveries")
     ]
     
     var body: some View {
         VStack(spacing: 40) {
-            Text("Key Features")
+            Text("Features")
                 .font(.system(size: 32, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
                 .padding(.top, 60)
@@ -55,26 +64,48 @@ struct Feature: Identifiable {
     let title: String
     let icon: String
     let color: Color
+    let description: String
 }
 
 struct FeatureRow: View {
     let feature: Feature
+    @State private var isExpanded = false
     
     var body: some View {
-        HStack(spacing: 20) {
-            Image(systemName: feature.icon)
-                .font(.system(size: 30))
-                .foregroundStyle(feature.color)
-                .frame(width: 60, height: 60)
-                .background(.ultraThinMaterial)
-                .clipShape(Circle())
+        VStack(alignment: .leading, spacing: 16) {
+            Button(action: {
+                withAnimation(.spring()) {
+                    isExpanded.toggle()
+                }
+            }) {
+                HStack(spacing: 20) {
+                    Image(systemName: feature.icon)
+                        .font(.system(size: 30))
+                        .foregroundStyle(feature.color)
+                        .frame(width: 60, height: 60)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                    
+                    Text(feature.title)
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.white.opacity(0.6))
+                        .rotationEffect(.degrees(isExpanded ? 90 : 0))
+                }
+            }
             
-            Text(feature.title)
-                .font(.title3)
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-            
-            Spacer()
+            if isExpanded {
+                Text(feature.description)
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.8))
+                    .padding(.leading, 80)
+                    .padding(.trailing, 20)
+            }
         }
         .padding(16)
         .background(Color.white.opacity(0.1))

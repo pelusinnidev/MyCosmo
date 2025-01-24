@@ -12,7 +12,7 @@ struct WelcomeView: View {
             Image("AppIconResource")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 120, height: 120)
+                .frame(width: 180, height: 180)
                 .opacity(isAnimated ? 1 : 0)
             
             // Title and Subtitle
