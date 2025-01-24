@@ -1,174 +1,119 @@
 import SwiftUI
 
 struct ThanksView: View {
-    let action: () -> Void
-    private let horizontalPadding: CGFloat = 24
-    private let spacing: CGFloat = 24
+    let completeOnboarding: () -> Void
+    @State private var isAnimating = false
+    @State private var showThankYou = false
+    @State private var showCredits = false
     
     var body: some View {
-        VStack(spacing: spacing) {
-            // Section indicator
-            Text("Final Step")
-                .font(.caption)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(.ultraThinMaterial)
-                .clipShape(Capsule())
-                .padding(.top, 20)
-            
+        VStack(spacing: 32) {
             Spacer()
-                .frame(height: 20)
             
-            // Success animation
+            // Animated Icon
             ZStack {
-                Circle()
-                    .fill(.green.opacity(0.1))
-                    .frame(width: 120, height: 120)
-                
-                Circle()
-                    .stroke(
-                        LinearGradient(
-                            colors: [.green.opacity(0.5), .green.opacity(0.2)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 2
-                    )
-                    .frame(width: 120, height: 120)
-                
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 60))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.green, .green.opacity(0.8)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+                ForEach(0..<3) { index in
+                    Circle()
+                        .stroke(Color.white.opacity(0.2), lineWidth: 2)
+                        .frame(width: 120 + CGFloat(index * 40),
+                               height: 120 + CGFloat(index * 40))
+                        .scaleEffect(isAnimating ? 1.2 : 0.8)
+                        .opacity(isAnimating ? 0 : 1)
+                        .animation(
+                            .easeInOut(duration: 1.5)
+                            .repeatForever(autoreverses: false)
+                            .delay(Double(index) * 0.2),
+                            value: isAnimating
                         )
-                    )
-                    .symbolEffect(.bounce)
-            }
-            .padding(.bottom, 20)
-            
-            VStack(spacing: 12) {
-                Text("You're All Set!")
-                    .font(.system(size: 30, weight: .bold))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.green, .green.opacity(0.8)],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                
-                Text("Ready to explore the cosmos")
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-            }
-            
-            // APIs Section
-            VStack(spacing: 24) {
-                Text("Powered by")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
-                    .padding(.top, 32)
-                
-                VStack(spacing: 16) {
-                    APICard(
-                        title: "NASA APOD",
-                        description: "Astronomy Picture of the Day",
-                        icon: "photo.fill"
-                    )
-                    
-                    APICard(
-                        title: "Space News API",
-                        description: "Latest space articles and updates",
-                        icon: "newspaper.fill"
-                    )
                 }
+                
+                Image(systemName: "star.fill")
+                    .font(.system(size: 60))
+                    .foregroundStyle(.white)
+                    .symbolEffect(.bounce, options: .repeating)
             }
-            .padding(.horizontal, horizontalPadding)
+            .padding(.bottom, 40)
+            
+            // Thank You Message
+            VStack(spacing: 16) {
+                Text("Thank You!")
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                    .opacity(showThankYou ? 1 : 0)
+                    .offset(y: showThankYou ? 0 : 20)
+                
+                Text("Get ready to explore the wonders\nof our universe")
+                    .font(.title3)
+                    .foregroundColor(.white.opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .opacity(showThankYou ? 1 : 0)
+                    .offset(y: showThankYou ? 0 : 20)
+            }
             
             Spacer()
             
-            // Team Credits
-            VStack(spacing: 16) {
-                Text("Created by")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+            // Credits
+            VStack(spacing: 12) {
+                Text("Powered by")
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.6))
                 
                 HStack(spacing: 20) {
-                    Text("Pol Hernàndez")
-                        .font(.subheadline)
-                        .foregroundStyle(.primary)
-                    
-                    Text("•")
-                        .foregroundStyle(.secondary)
-                    
-                    Text("Adrià Sanchez")
-                        .font(.subheadline)
-                        .foregroundStyle(.primary)
+                    CreditsItem(text: "NASA", icon: "globe.americas.fill")
+                    CreditsItem(text: "SpaceNews", icon: "newspaper.fill")
+                    CreditsItem(text: "ESA", icon: "sparkles")
                 }
-                
-                Text("La Salle Gràcia - DAM2")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
-            .padding(.bottom, 32)
+            .opacity(showCredits ? 1 : 0)
+            .offset(y: showCredits ? 0 : 20)
             
-            Button(action: action) {
-                Text("Begin Exploration")
+            Spacer()
+            
+            // Start Button
+            Button(action: completeOnboarding) {
+                Text("Start Exploring")
                     .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(height: 50)
+                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
-                    .background(
-                        LinearGradient(
-                            colors: [.green, .green.opacity(0.8)],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .frame(height: 56)
+                    .background(Color.white)
+                    .cornerRadius(16)
+                    .shadow(color: .white.opacity(0.2), radius: 8, x: 0, y: 4)
             }
-            .padding(.horizontal, horizontalPadding)
-            .padding(.bottom, 100)
+            .padding(.horizontal, 40)
+            .padding(.bottom, 60)
+        }
+        .onAppear {
+            withAnimation(.spring(duration: 0.8)) {
+                isAnimating = true
+            }
+            withAnimation(.easeOut(duration: 0.6).delay(0.3)) {
+                showThankYou = true
+            }
+            withAnimation(.easeOut(duration: 0.6).delay(0.6)) {
+                showCredits = true
+            }
         }
     }
 }
 
-// API Card component
-private struct APICard: View {
-    let title: String
-    let description: String
+struct CreditsItem: View {
+    let text: String
     let icon: String
     
     var body: some View {
-        HStack(spacing: 16) {
-            Circle()
-                .fill(.ultraThinMaterial)
-                .frame(width: 44, height: 44)
-                .overlay {
-                    Image(systemName: icon)
-                        .font(.title3)
-                        .foregroundStyle(.green.gradient)
-                        .symbolEffect(.pulse)
-                }
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundStyle(.white)
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.subheadline)
-                    .bold()
-                    .foregroundStyle(.primary)
-                
-                Text(description)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            
-            Spacer()
+            Text(text)
+                .font(.caption)
+                .foregroundColor(.white.opacity(0.8))
         }
-        .padding(16)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .frame(width: 80)
+        .padding(.vertical, 12)
+        .background(Color.white.opacity(0.1))
+        .cornerRadius(12)
     }
 } 

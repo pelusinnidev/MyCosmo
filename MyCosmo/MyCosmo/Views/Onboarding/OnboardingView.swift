@@ -2,94 +2,92 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
-    @State private var currentPage: OnboardingPage = .welcome
-    @State private var pageIndex = 0
+    @State private var currentPage = 0
     
-    private let transition: AnyTransition = .asymmetric(
-        insertion: .move(edge: .trailing).combined(with: .opacity),
-        removal: .move(edge: .leading).combined(with: .opacity)
+    private let pages = ["welcome", "features", "thanks"]
+    private let backgroundGradient = LinearGradient(
+        colors: [
+            Color(red: 13/255, green: 15/255, blue: 44/255),
+            Color(red: 26/255, green: 30/255, blue: 88/255)
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
     )
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color(.systemBackground)
+                // Background
+                backgroundGradient
                     .ignoresSafeArea()
                 
-                TabView(selection: $pageIndex) {
-                    // Welcome
-                    WelcomeView {
-                        withAnimation {
-                            pageIndex = 1
-                            currentPage = .features
-                        }
-                    }
-                    .tag(0)
+                // Stars effect
+                StarsView()
+                    .ignoresSafeArea()
+                
+                TabView(selection: $currentPage) {
+                    // Welcome Page
+                    WelcomeView(nextPage: { withAnimation { currentPage = 1 }})
+                        .tag(0)
                     
-                    // Features
-                    Group {
-                        // News
-                        OnboardingFeatureView(
-                            title: "Stay Updated",
-                            subtitle: "Space News & Daily Astronomy",
-                            description: "• Latest space news and discoveries\n• NASA's Astronomy Picture of the Day\n• Interactive news filtering\n• Rich media content",
-                            systemImage: "newspaper.fill",
-                            tint: .blue,
-                            buttonTitle: "Next",
-                            action: { withAnimation { pageIndex = 2 } }
-                        )
+                    // Features Page
+                    FeaturesView(nextPage: { withAnimation { currentPage = 2 }})
                         .tag(1)
-                        
-                        // Solar System
-                        OnboardingFeatureView(
-                            title: "Explore Space",
-                            subtitle: "Interactive Solar System",
-                            description: "• Detailed planet information\n• Beautiful planetary imagery\n• Physical characteristics\n• Interesting facts",
-                            systemImage: "globe.europe.africa.fill",
-                            tint: .purple,
-                            buttonTitle: "Next",
-                            action: { withAnimation { pageIndex = 3 } }
-                        )
-                        .tag(2)
-                        
-                        // Observations
-                        OnboardingFeatureView(
-                            title: "Document",
-                            subtitle: "Personal Observations",
-                            description: "• Record astronomical observations\n• Add multiple photos\n• Organize by categories\n• Filter and search",
-                            systemImage: "binoculars.fill",
-                            tint: .indigo,
-                            buttonTitle: "Next",
-                            action: { withAnimation { 
-                                pageIndex = 4
-                                currentPage = .thanks
-                            } }
-                        )
-                        .tag(3)
-                    }
                     
-                    // Get Started
-                    ThanksView {
+                    // Thanks Page
+                    ThanksView(completeOnboarding: {
                         withAnimation {
                             hasCompletedOnboarding = true
                         }
-                    }
-                    .tag(4)
+                    })
+                    .tag(2)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .animation(.spring(), value: pageIndex)
+                .animation(.spring(), value: currentPage)
                 
-                // Custom Page Control
+                // Custom Page Indicator
                 VStack {
                     Spacer()
-                    if pageIndex < 4 {
-                        PageControl(
-                            numberOfPages: 4,
-                            currentPage: pageIndex
-                        )
+                    PageIndicator(totalPages: pages.count, currentPage: currentPage)
                         .padding(.bottom, 40)
-                    }
                 }
+            }
+        }
+        .preferredColorScheme(.dark)
+    }
+}
+
+struct StarsView: View {
+    let starCount = 100
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ForEach(0..<starCount, id: \.self) { _ in
+                Circle()
+                    .fill(.white)
+                    .frame(width: CGFloat.random(in: 1...3))
+                    .position(
+                        x: CGFloat.random(in: 0...geometry.size.width),
+                        y: CGFloat.random(in: 0...geometry.size.height)
+                    )
+                    .opacity(Double.random(in: 0.2...0.8))
+            }
+        }
+    }
+}
+
+struct PageIndicator: View {
+    let totalPages: Int
+    let currentPage: Int
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            ForEach(0..<totalPages, id: \.self) { page in
+                Circle()
+                    .fill(currentPage == page ? Color.white : Color.white.opacity(0.5))
+                    .frame(width: 8, height: 8)
+                    .scaleEffect(currentPage == page ? 1.2 : 1.0)
+                    .animation(.spring(), value: currentPage)
             }
         }
     }

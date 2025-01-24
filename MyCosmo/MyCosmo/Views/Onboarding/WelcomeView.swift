@@ -1,116 +1,80 @@
 import SwiftUI
 
 struct WelcomeView: View {
-    let action: () -> Void
-    private let horizontalPadding: CGFloat = 24
-    private let spacing: CGFloat = 24
+    let nextPage: () -> Void
+    @State private var titleOpacity = 0.0
+    @State private var subtitleOpacity = 0.0
+    @State private var buttonOpacity = 0.0
     
     var body: some View {
-        VStack(spacing: spacing) {
-            // Section indicator
-            Text("Welcome")
-                .font(.caption)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(.ultraThinMaterial)
-                .clipShape(Capsule())
-                .padding(.top, 20)
-            
+        VStack(spacing: 24) {
             Spacer()
-                .frame(height: 20)
             
-            // App Icon with enhanced effects
-            ZStack {
-                Circle()
-                    .fill(.purple.opacity(0.1))
-                    .frame(width: 120, height: 120)
-                
-                Circle()
-                    .stroke(
-                        LinearGradient(
-                            colors: [.purple.opacity(0.5), .purple.opacity(0.2)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 2
-                    )
-                    .frame(width: 120, height: 120)
-                
-                Image("AppIconResource")
-                    .resizable()
-                    .frame(width: 90, height: 90)
-                    .clipShape(RoundedRectangle(cornerRadius: 22))
-                    .shadow(color: .purple.opacity(0.3), radius: 20, x: 0, y: 10)
-            }
-            .padding(.bottom, 20)
+            // App Icon
+            Image(systemName: "sparkles.square.filled.on.square")
+                .font(.system(size: 80))
+                .foregroundStyle(.white)
+                .symbolEffect(.bounce, options: .repeating)
             
-            VStack(spacing: 12) {
+            // Title
+            VStack(spacing: 16) {
                 Text("MyCosmo")
-                    .font(.system(size: 34, weight: .bold))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.purple, .blue],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                
-                Text("Be your Universe")
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-            }
-            
-            // Feature preview
-            HStack(spacing: 20) {
-                ForEach([
-                    "newspaper.fill",
-                    "globe.europe.africa.fill",
-                    "binoculars.fill",
-                    "gearshape.fill"
-                ], id: \.self) { iconName in
-                    Image(systemName: iconName)
-                        .font(.title2)
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.purple, .blue],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .symbolEffect(.pulse)
-                }
-            }
-            .padding(.top, 24)
-            
-            Spacer()
-            
-            // Description
-            Text("Explore space news, track celestial observations, and discover our solar system in an interactive experience.")
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, horizontalPadding)
-            
-            Spacer()
-                .frame(height: 32)
-            
-            Button(action: action) {
-                Text("Start Journey")
-                    .font(.headline)
+                    .font(.system(size: 44, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
-                    .frame(height: 50)
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        LinearGradient(
-                            colors: [.purple, .blue],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .opacity(titleOpacity)
+                
+                Text("Your Personal Gateway\nto the Universe")
+                    .font(.title2)
+                    .foregroundColor(.white.opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .opacity(subtitleOpacity)
             }
-            .padding(.horizontal, horizontalPadding)
-            .padding(.bottom, 100)
+            
+            Spacer()
+            
+            // Start Button
+            Button(action: nextPage) {
+                Text("Begin Your Journey")
+                    .font(.headline)
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 56)
+                    .background(Color.white)
+                    .cornerRadius(16)
+                    .shadow(color: .white.opacity(0.2), radius: 8, x: 0, y: 4)
+            }
+            .padding(.horizontal, 40)
+            .opacity(buttonOpacity)
+        }
+        .padding(.vertical, 60)
+        .onAppear {
+            withAnimation(.easeOut(duration: 0.8).delay(0.2)) {
+                titleOpacity = 1
+            }
+            withAnimation(.easeOut(duration: 0.8).delay(0.4)) {
+                subtitleOpacity = 1
+            }
+            withAnimation(.easeOut(duration: 0.8).delay(0.6)) {
+                buttonOpacity = 1
+            }
+        }
+    }
+}
+
+// Feature Icon Component
+struct FeatureIcon: View {
+    let name: String
+    let color: Color
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(.ultraThinMaterial)
+                .frame(width: 60, height: 60)
+            
+            Image(systemName: name)
+                .font(.system(size: 24, weight: .semibold))
+                .foregroundStyle(color)
         }
     }
 } 

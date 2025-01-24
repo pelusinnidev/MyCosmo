@@ -1,158 +1,114 @@
 import SwiftUI
 
 struct FeaturesView: View {
-    @Binding var selectedFeatureIndex: Int
-    let action: () -> Void
+    let nextPage: () -> Void
+    @State private var selectedFeature = 0
     
-    private let spacing: CGFloat = 24
-    private let horizontalPadding: CGFloat = 24
     private let features = [
-        OnboardingFeature(
+        FeatureItem(
             title: "Space News",
-            description: "• Daily NASA's Astronomy Picture of the Day\n• Latest space discoveries and missions\n• Breaking news from space agencies\n• Detailed articles about astronomy",
-            systemImage: "newspaper.fill",
-            tint: .indigo
+            description: "Stay updated with the latest astronomical discoveries and space exploration news",
+            icon: "newspaper.fill",
+            color: Color(red: 0.2, green: 0.6, blue: 1.0)
         ),
-        OnboardingFeature(
+        FeatureItem(
             title: "Solar System",
-            description: "• Explore all planets in our solar system\n• Learn about moons and their characteristics\n• Discover interesting facts and statistics\n• View beautiful space imagery",
-            systemImage: "globe.europe.africa.fill",
-            tint: .indigo
+            description: "Explore detailed information about planets, moons, and other celestial bodies",
+            icon: "globe.americas.fill",
+            color: Color(red: 0.6, green: 0.2, blue: 1.0)
         ),
-        OnboardingFeature(
-            title: "Personal Log",
-            description: "• Record your astronomical observations\n• Add photos of celestial objects\n• Track observation conditions\n• Note your discoveries and findings",
-            systemImage: "binoculars.fill",
-            tint: .indigo
-        ),
-        OnboardingFeature(
-            title: "Your Experience",
-            description: "• Choose between light and dark mode\n• Customize your app appearance\n• Set your preferred language\n• Personalize your experience",
-            systemImage: "gearshape.fill",
-            tint: .indigo
+        FeatureItem(
+            title: "Observations",
+            description: "Document and track your astronomical observations with photos and notes",
+            icon: "binoculars.fill",
+            color: Color(red: 0.2, green: 0.8, blue: 0.8)
         )
     ]
     
     var body: some View {
-        TabView(selection: $selectedFeatureIndex) {
-            ForEach(Array(features.enumerated()), id: \.element.id) { index, feature in
-                VStack(spacing: spacing) {
-                    // Section indicator
-                    Text("\(index + 1) of \(features.count)")
-                        .font(.caption)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(.ultraThinMaterial)
-                        .clipShape(Capsule())
-                        .padding(.top, 20)
-                    
-                    Spacer()
-                        .frame(height: 40)
-                    
-                    // Feature card with enhanced design
-                    VStack(spacing: spacing) {
-                        ZStack {
-                            // Background effects
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [.purple.opacity(0.2), .blue.opacity(0.2)],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 120, height: 120)
-                                .blur(radius: 20)
-                            
-                            // Decorative rings
-                            ForEach(0..<2) { ring in
-                                Circle()
-                                    .strokeBorder(
-                                        LinearGradient(
-                                            colors: [.purple.opacity(0.1), .blue.opacity(0.1)],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ),
-                                        lineWidth: 1
-                                    )
-                                    .frame(width: 140 + CGFloat(ring * 30),
-                                           height: 140 + CGFloat(ring * 30))
-                            }
-                            
-                            // Icon with gradient and animation
-                            Image(systemName: feature.systemImage)
-                                .font(.system(size: 60, weight: .light))
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.purple, .blue],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .symbolEffect(.bounce, options: .repeating)
-                        }
-                        .frame(height: 160)
-                        .frame(maxWidth: .infinity)
-                        
-                        VStack(spacing: 16) {
-                            Text(feature.title)
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .multilineTextAlignment(.center)
-                                .foregroundStyle(Color(.label))
-                                .frame(height: 30)
-                            
-                            Text(feature.description)
-                                .font(.body)
-                                .multilineTextAlignment(.leading)
-                                .foregroundStyle(Color(.secondaryLabel))
-                                .fixedSize(horizontal: false, vertical: true)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.horizontal, 20)
-                        }
-                        .padding(.horizontal, 32)
-                    }
-                    
-                    Spacer()
-                    
-                    // Continue button
-                    if index == features.count - 1 {
-                        Button(action: action) {
-                            Text("Continue")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(height: 54)
-                                .frame(maxWidth: .infinity)
-                                .background(
-                                    LinearGradient(
-                                        colors: [.purple, .blue],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
-                        }
-                        .padding(.horizontal, horizontalPadding)
-                        .padding(.bottom, 40)
-                    }
+        VStack(spacing: 32) {
+            Text("Discover Features")
+                .font(.system(size: 32, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+                .padding(.top, 60)
+            
+            TabView(selection: $selectedFeature) {
+                ForEach(0..<features.count, id: \.self) { index in
+                    FeatureCard(feature: features[index])
+                        .tag(index)
                 }
-                .tag(index)
             }
-        }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .overlay(alignment: .bottom) {
-            PageControl(numberOfPages: features.count,
-                       currentPage: selectedFeatureIndex)
-                .padding(.bottom, 100)
+            .tabViewStyle(.page)
+            .frame(height: 400)
+            
+            Spacer()
+            
+            Button(action: nextPage) {
+                Text("Continue")
+                    .font(.headline)
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 56)
+                    .background(Color.white)
+                    .cornerRadius(16)
+                    .shadow(color: .white.opacity(0.2), radius: 8, x: 0, y: 4)
+            }
+            .padding(.horizontal, 40)
+            .padding(.bottom, 60)
         }
     }
 }
 
-// Feature model
-private struct OnboardingFeature: Identifiable {
-    let id = UUID()
+struct FeatureItem {
     let title: String
     let description: String
-    let systemImage: String
-    let tint: Color
+    let icon: String
+    let color: Color
+}
+
+struct FeatureCard: View {
+    let feature: FeatureItem
+    @State private var isAnimating = false
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            Image(systemName: feature.icon)
+                .font(.system(size: 60))
+                .foregroundStyle(feature.color)
+                .symbolEffect(.bounce, options: .repeating)
+                .padding(.top, 40)
+            
+            VStack(spacing: 16) {
+                Text(feature.title)
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                
+                Text(feature.description)
+                    .font(.body)
+                    .foregroundColor(.white.opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 24)
+                .fill(Color.black.opacity(0.3))
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 24))
+        )
+        .padding(.horizontal, 20)
+        .rotation3DEffect(
+            .degrees(isAnimating ? 0 : -10),
+            axis: (x: 1, y: 0, z: 0)
+        )
+        .offset(y: isAnimating ? 0 : 50)
+        .opacity(isAnimating ? 1 : 0)
+        .onAppear {
+            withAnimation(.spring(duration: 0.8)) {
+                isAnimating = true
+            }
+        }
+    }
 } 
