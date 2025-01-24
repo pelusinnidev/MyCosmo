@@ -16,31 +16,9 @@ struct PlanetDetailView: View {
         ScrollView {
             VStack(spacing: 0) {
                 // Header Image with parallax effect
-                GeometryReader { geo in
-                    let minY = geo.frame(in: .global).minY
-                    let height = geo.size.height
-                    let offset = -minY
-                    let opacity = 1 - (offset / 100)
-                    
-                    Image(planet.englishName)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: geo.size.width, height: height + (offset > 0 ? offset : 0))
-                        .offset(y: offset > 0 ? -offset : 0)
-                        .opacity(opacity)
-                        .overlay {
-                            LinearGradient(
-                                colors: [
-                                    .black.opacity(0.4),
-                                    .clear,
-                                    colorScheme == .dark ? .black : .white
-                                ],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        }
-                }
-                .frame(height: 300)
+                Image(planet.englishName)
+                    .resizable()
+                    .scaledToFill()
                 
                 // Content
                 VStack(spacing: 24) {
@@ -93,7 +71,6 @@ struct PlanetDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .ignoresSafeArea(.container, edges: .top)
     }
 }
 
