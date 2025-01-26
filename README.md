@@ -64,7 +64,3 @@ Under the following terms:
 - ShareAlike — If you remix, transform, or build upon the material, you must distribute your contributions under the same license
 
 For more information, visit: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
----
-
-Made with ❤️ in Barcelona 
