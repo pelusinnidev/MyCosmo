@@ -1,10 +1,16 @@
 import SwiftUI
 
+/// Second screen of the onboarding experience
+/// Presents the app's main features with interactive, animated cards
 struct FeaturesView: View {
+    /// Closure to trigger navigation to the next page
     let nextPage: () -> Void
+    /// Controls the animation state of view elements
     @State private var isAnimated = false
+    /// Tracks the currently expanded feature card
     @State private var selectedFeatureId: UUID?
     
+    /// Array of features to display
     private let features = [
         Feature(title: "Space News", 
                icon: "newspaper.fill", 
@@ -22,12 +28,14 @@ struct FeaturesView: View {
     
     var body: some View {
         VStack(spacing: 40) {
+            // Title with fade-in animation
             Text("Features")
                 .font(.system(size: 32, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
                 .padding(.top, 60)
                 .opacity(isAnimated ? 1 : 0)
             
+            // Feature cards with slide-in animation
             VStack(spacing: 24) {
                 ForEach(features) { feature in
                     FeatureRow(feature: feature, selectedFeatureId: $selectedFeatureId)
@@ -39,6 +47,7 @@ struct FeaturesView: View {
             
             Spacer()
             
+            // Continue button with fade-in animation
             Button(action: nextPage) {
                 Text("Continue")
                     .font(.headline)
@@ -60,24 +69,35 @@ struct FeaturesView: View {
     }
 }
 
+/// Model representing a feature to be displayed in the onboarding
 struct Feature: Identifiable {
+    /// Unique identifier for the feature
     let id = UUID()
+    /// Title of the feature
     let title: String
+    /// SF Symbol name for the feature's icon
     let icon: String
+    /// Theme color for the feature
     let color: Color
+    /// Detailed description of the feature
     let description: String
 }
 
+/// Custom row view for displaying a feature with expandable description
 struct FeatureRow: View {
+    /// The feature to display
     let feature: Feature
+    /// Binding to track the selected feature's ID
     @Binding var selectedFeatureId: UUID?
     
+    /// Computed property to determine if this row is expanded
     private var isExpanded: Bool {
         selectedFeatureId == feature.id
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            // Feature header with icon and title
             Button(action: {
                 withAnimation(.spring()) {
                     selectedFeatureId = isExpanded ? nil : feature.id
@@ -104,6 +124,7 @@ struct FeatureRow: View {
                 }
             }
             
+            // Expandable description
             if isExpanded {
                 Text(feature.description)
                     .font(.subheadline)

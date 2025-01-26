@@ -2,21 +2,27 @@ import SwiftUI
 import SwiftData
 import PhotosUI
 
+/// View for creating a new astronomical observation
+/// Features a form-based interface with image selection and metadata input
 struct AddObservationView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
     
+    // Form fields
     @State private var title = ""
     @State private var description = ""
     @State private var selectedPlanet: Planet = .earth
     @State private var customPlanet = ""
     @State private var category = ObservationCategory.other
     @State private var importance = ImportanceLevel.medium
+    
+    // Image selection
     @State private var selectedItems: [PhotosPickerItem] = []
     @State private var selectedImages: [UIImage] = []
     @State private var useCustomImages = false
     
+    // Layout
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -26,10 +32,12 @@ struct AddObservationView: View {
     var body: some View {
         NavigationStack {
             Form {
+                // Image selection section
                 Section("Images") {
                     Toggle("Use Custom Images", isOn: $useCustomImages)
                     
                     if useCustomImages {
+                        // Photos picker
                         PhotosPicker(selection: $selectedItems,
                                    maxSelectionCount: 10,
                                    matching: .images,
@@ -38,6 +46,7 @@ struct AddObservationView: View {
                         }
                         
                         if !selectedImages.isEmpty {
+                            // Image carousel
                             TabView {
                                 ForEach(selectedImages, id: \.self) { image in
                                     Image(uiImage: image)
@@ -51,7 +60,7 @@ struct AddObservationView: View {
                             .tabViewStyle(.page)
                             .indexViewStyle(.page(backgroundDisplayMode: .always))
                             
-                            // Thumbnails Grid
+                            // Image thumbnails grid
                             LazyVGrid(columns: columns, spacing: 8) {
                                 ForEach(selectedImages.indices, id: \.self) { index in
                                     ZStack(alignment: .topTrailing) {
@@ -92,6 +101,7 @@ struct AddObservationView: View {
                     }
                 }
                 
+                // Basic information section
                 Section("Basic Information") {
                     TextField("Title", text: $title)
                     
@@ -106,6 +116,7 @@ struct AddObservationView: View {
                     }
                 }
                 
+                // Description section
                 Section("Description") {
                     TextEditor(text: $description)
                         .frame(minHeight: 100)
@@ -119,6 +130,7 @@ struct AddObservationView: View {
                         }
                 }
                 
+                // Classification section
                 Section {
                     Picker("Category", selection: $category) {
                         ForEach(ObservationCategory.allCases, id: \.self) { category in
@@ -165,21 +177,23 @@ struct AddObservationView: View {
         }
     }
     
+    /// Validates if the form is ready to be submitted
     private var isFormValid: Bool {
         !title.isEmpty && 
         !description.isEmpty && 
         (selectedPlanet != .other || !customPlanet.isEmpty)
     }
     
+    /// Creates and saves a new observation
     private func saveObservation() {
         var mainImageData: Data? = nil
         var additionalImagesData: [Data] = []
         
         if useCustomImages && !selectedImages.isEmpty {
-            // Primera imagen como principal
+            // First image as main image
             mainImageData = selectedImages[0].jpegData(compressionQuality: 0.8)
             
-            // Resto de imágenes como adicionales
+            // Remaining images as additional images
             if selectedImages.count > 1 {
                 additionalImagesData = selectedImages[1...].compactMap { $0.jpegData(compressionQuality: 0.8) }
             }
@@ -200,8 +214,9 @@ struct AddObservationView: View {
     }
 }
 
-// Extension para el placeholder del TextEditor
+// Extension for TextEditor placeholder
 extension View {
+    /// Adds a placeholder to a view when a condition is met
     func placeholder<Content: View>(
         when shouldShow: Bool,
         alignment: Alignment = .leading,

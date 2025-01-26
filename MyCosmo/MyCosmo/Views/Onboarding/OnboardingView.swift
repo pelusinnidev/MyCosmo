@@ -1,12 +1,17 @@
 import SwiftUI
 
+/// Main container view for the app's onboarding experience
+/// Manages the flow between different onboarding pages using a custom background
+/// and smooth transitions
 struct OnboardingView: View {
+    /// Binding to track whether onboarding has been completed
     @Binding var hasCompletedOnboarding: Bool
+    /// Current page index in the onboarding flow
     @State private var currentPage = 0
     
     var body: some View {
         ZStack {
-            // Background gradient
+            // Background gradient for the entire onboarding experience
             LinearGradient(
                 colors: [
                     Color(red: 13/255, green: 15/255, blue: 44/255),
@@ -17,7 +22,7 @@ struct OnboardingView: View {
             )
             .ignoresSafeArea()
             
-            // Content
+            // Page content with transitions
             Group {
                 switch currentPage {
                 case 0:

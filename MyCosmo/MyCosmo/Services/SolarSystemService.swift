@@ -1,8 +1,13 @@
 import Foundation
 
+/// Type alias for the Moon struct from PlanetData
 typealias Moon = PlanetData.Moon
 
+/// Service responsible for providing detailed information about celestial bodies in our solar system
+/// Contains a local database of planet information including physical characteristics and fun facts
 actor SolarSystemService {
+    /// Local database of planet information
+    /// Each PlanetData object contains comprehensive information about a planet
     private let planets: [PlanetData] = [
         PlanetData(
             id: "199",
@@ -238,10 +243,16 @@ actor SolarSystemService {
         )
     ]
     
+    /// Retrieves information about all celestial bodies in the solar system
+    /// - Returns: An array of PlanetData objects containing information about all planets
     func fetchAllBodies() async throws -> [PlanetData] {
         return planets
     }
     
+    /// Retrieves detailed information about a specific planet
+    /// - Parameter id: The unique identifier of the planet
+    /// - Returns: A PlanetData object containing the planet's information
+    /// - Throws: URLError.cannotFindHost if the planet ID is not found
     func fetchPlanetDetails(id: String) async throws -> PlanetData {
         guard let planet = planets.first(where: { $0.id == id }) else {
             throw URLError(.cannotFindHost)

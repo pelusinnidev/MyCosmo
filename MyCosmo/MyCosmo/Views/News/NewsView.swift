@@ -1,12 +1,15 @@
 import SwiftUI
 import SwiftData
 
+/// Main view for displaying space-related news and NASA's APOD
+/// Features a filterable news feed and access to the Astronomy Picture of the Day
 struct NewsView: View {
     @StateObject private var viewModel = NewsViewModel()
     @State private var showingAPOD = false
     @State private var showingInfo = false
     @Environment(\.colorScheme) private var colorScheme
     
+    /// Content for the information sheet
     private let infoContent = InfoSheetContent(
         icon: "newspaper.fill",
         title: "Space News",
@@ -26,7 +29,7 @@ struct NewsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    // Filter Pills
+                    // News Type Filter Pills
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
                             ForEach(NewsType.allCases, id: \.self) { type in
@@ -41,7 +44,7 @@ struct NewsView: View {
                     }
                     .padding(.vertical, 8)
                     
-                    // News Cards
+                    // News Articles Grid
                     let columns = [
                         GridItem(.adaptive(minimum: 300), spacing: 16)
                     ]
@@ -94,9 +97,14 @@ struct NewsView: View {
     }
 }
 
+/// A button that filters news by category
+/// Features a capsule shape with icon and text
 struct FilterPillButton: View {
+    /// The type of news to filter
     let type: NewsType
+    /// Whether this filter is currently selected
     let isSelected: Bool
+    /// Action to perform when tapped
     let action: () -> Void
     
     var body: some View {
@@ -118,14 +126,17 @@ struct FilterPillButton: View {
     }
 }
 
+/// A card view that displays a space news article
+/// Features an image, title, summary, and metadata
 struct NewsCard: View {
+    /// The article to display
     let article: SpaceNewsArticle
     @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
         Link(destination: URL(string: article.url)!) {
             VStack(alignment: .leading, spacing: 12) {
-                // Image
+                // Article Image
                 AsyncImage(url: URL(string: article.imageUrl)) { phase in
                     switch phase {
                     case .empty:
@@ -153,6 +164,7 @@ struct NewsCard: View {
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 
+                // Article Content
                 VStack(alignment: .leading, spacing: 8) {
                     Text(article.title)
                         .font(.headline)
@@ -166,6 +178,7 @@ struct NewsCard: View {
                         .lineLimit(3)
                         .multilineTextAlignment(.leading)
                     
+                    // Article Metadata
                     HStack(alignment: .center, spacing: 8) {
                         Text(article.newsSite)
                             .font(.caption)
@@ -190,6 +203,9 @@ struct NewsCard: View {
         }
     }
     
+    /// Formats the article's publication date
+    /// - Parameter dateString: The raw date string from the API
+    /// - Returns: A formatted date string
     private func formatDate(_ dateString: String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"

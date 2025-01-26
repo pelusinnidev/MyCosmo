@@ -1,6 +1,8 @@
 import SwiftUI
 import SwiftData
 
+/// Main view for exploring the solar system
+/// Displays a list of planets with basic information and navigation to detailed views
 struct SolarSystemView: View {
     @StateObject private var viewModel = SolarSystemViewModel()
     @Environment(\.colorScheme) private var colorScheme
@@ -9,6 +11,7 @@ struct SolarSystemView: View {
     var body: some View {
         NavigationStack {
             List {
+                // Loading state
                 if viewModel.isLoading && viewModel.planets.isEmpty {
                     HStack {
                         Spacer()
@@ -17,15 +20,18 @@ struct SolarSystemView: View {
                     }
                     .listRowBackground(Color.clear)
                 } else {
+                    // Planet list
                     ForEach(viewModel.planets) { planet in
                         NavigationLink(destination: PlanetDetailView(planet: planet)) {
                             HStack(spacing: 16) {
+                                // Planet image
                                 Image(planet.englishName)
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 60, height: 60)
                                     .clipShape(Circle())
                                 
+                                // Planet info
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(planet.englishName)
                                         .font(.headline)
@@ -41,6 +47,7 @@ struct SolarSystemView: View {
             }
             .navigationTitle("Solar System")
             .toolbar {
+                // Info button
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
                         showingInfo = true
@@ -52,6 +59,7 @@ struct SolarSystemView: View {
             .sheet(isPresented: $showingInfo) {
                 NavigationStack {
                     List {
+                        // Header section
                         Section {
                             VStack(spacing: 16) {
                                 // Icon Circle
@@ -67,7 +75,7 @@ struct SolarSystemView: View {
                                 }
                                 .padding(.top, 16)
                                 
-                                // Title and Subtitle
+                                // Title and description
                                 VStack(spacing: 8) {
                                     Text("Solar System")
                                         .font(.title2)
@@ -86,12 +94,14 @@ struct SolarSystemView: View {
                             .listRowBackground(Color.clear)
                         }
                         
+                        // Features section
                         Section("Features") {
                             InfoSheetRow(symbol: "globe.europe.africa.fill", title: "Planet Cards", description: "Interactive cards with planet images and basic data")
                             InfoSheetRow(symbol: "text.book.closed.fill", title: "Fun Facts", description: "Interesting facts about each planet")
                             InfoSheetRow(symbol: "ruler.fill", title: "Physical Data", description: "Detailed physical characteristics and measurements")
                         }
                         
+                        // Technologies section
                         Section("Technologies") {
                             InfoSheetRow(symbol: "swift", title: "Swift Features", description: "SwiftUI, MVVM, List layouts, Custom animations")
                             InfoSheetRow(symbol: "square.stack.3d.up.fill", title: "Data Source", description: "Local dataset with comprehensive planetary data")
@@ -125,6 +135,7 @@ struct SolarSystemView: View {
     }
 }
 
+/// Card view for displaying a planet in a grid layout
 struct PlanetCard: View {
     let planet: PlanetData
     @Environment(\.colorScheme) private var colorScheme
@@ -135,6 +146,7 @@ struct PlanetCard: View {
             viewModel.selectedPlanet = planet
         } label: {
             VStack(spacing: 0) {
+                // Planet image
                 Image(planet.englishName)
                     .resizable()
                     .scaledToFill()
@@ -148,6 +160,7 @@ struct PlanetCard: View {
                         )
                     )
                 
+                // Planet info
                 VStack(spacing: 4) {
                     Text(planet.englishName)
                         .font(.headline)

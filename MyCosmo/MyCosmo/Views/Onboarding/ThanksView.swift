@@ -1,21 +1,25 @@
 import SwiftUI
 
+/// Final screen of the onboarding experience
+/// Thanks the user and displays API credits with animated entrance
 struct ThanksView: View {
+    /// Closure to complete the onboarding process
     let completeOnboarding: () -> Void
+    /// Controls the animation state of view elements
     @State private var isAnimated = false
     
     var body: some View {
         VStack(spacing: 40) {
             Spacer()
             
-            // Star Icon
+            // Animated star icon
             Image(systemName: "sparkles")
                 .font(.system(size: 80))
                 .foregroundStyle(.white)
                 .opacity(isAnimated ? 1 : 0)
                 .scaleEffect(isAnimated ? 1 : 0.5)
             
-            // Thank You Message
+            // Thank you message with animation
             VStack(spacing: 16) {
                 Text("Thank You!")
                     .font(.system(size: 36, weight: .bold, design: .rounded))
@@ -30,13 +34,14 @@ struct ThanksView: View {
             .opacity(isAnimated ? 1 : 0)
             .offset(y: isAnimated ? 0 : 20)
             
-            // API Credits
+            // API credits section with animation
             VStack(spacing: 12) {
                 Text("Powered by")
                     .font(.footnote)
                     .foregroundColor(.white.opacity(0.6))
                 
                 HStack(spacing: 16) {
+                    // NASA APOD credit badge
                     HStack(spacing: 8) {
                         Image(systemName: "photo.fill")
                             .font(.system(size: 14))
@@ -50,6 +55,7 @@ struct ThanksView: View {
                     .background(Color.white.opacity(0.1))
                     .cornerRadius(12)
                     
+                    // NewsAPI credit badge
                     HStack(spacing: 8) {
                         Image(systemName: "newspaper.fill")
                             .font(.system(size: 14))
@@ -70,7 +76,7 @@ struct ThanksView: View {
             
             Spacer()
             
-            // Start Button
+            // Start button with animation
             Button(action: completeOnboarding) {
                 Text("Start Exploring")
                     .font(.headline)

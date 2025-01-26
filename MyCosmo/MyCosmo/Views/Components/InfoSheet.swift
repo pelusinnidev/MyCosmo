@@ -1,24 +1,39 @@
 import SwiftUI
 
+/// Content structure for the information sheet
+/// Contains all the data needed to display feature and technology information
 struct InfoSheetContent {
+    /// SF Symbol name for the main icon
     let icon: String
+    /// Main title of the information sheet
     let title: String
+    /// Subtitle or brief description
     let subtitle: String
+    /// Array of feature items with their symbols, titles, and descriptions
     let features: [(symbol: String, title: String, description: String)]
+    /// Array of technology items with their symbols, titles, and descriptions
     let technologies: [(symbol: String, title: String, description: String)]
 }
 
+/// A reusable sheet view that displays information about app features and technologies
+/// Presents content in a structured format with:
+/// - Header with icon and title
+/// - Features section with icons and descriptions
+/// - Technologies section with implementation details
 struct InfoSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
+    
+    /// Content to be displayed in the sheet
     let content: InfoSheetContent
     
     var body: some View {
         NavigationStack {
             List {
+                // Header Section with Icon and Title
                 Section {
                     VStack(spacing: 16) {
-                        // Icon Circle
+                        // Icon Circle with shadow
                         ZStack {
                             Circle()
                                 .fill(colorScheme == .dark ? Color(.systemGray6) : .white)
@@ -31,7 +46,7 @@ struct InfoSheet: View {
                         }
                         .padding(.top, 16)
                         
-                        // Title and Subtitle
+                        // Title and Subtitle Section
                         VStack(spacing: 8) {
                             Text(content.title)
                                 .font(.title2)
@@ -50,6 +65,7 @@ struct InfoSheet: View {
                     .listRowBackground(Color.clear)
                 }
                 
+                // Features Section
                 Section("Features") {
                     ForEach(content.features, id: \.title) { feature in
                         InfoSheetRow(
@@ -60,6 +76,7 @@ struct InfoSheet: View {
                     }
                 }
                 
+                // Technologies Section
                 Section("Technologies") {
                     ForEach(content.technologies, id: \.title) { tech in
                         InfoSheetRow(

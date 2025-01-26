@@ -1,5 +1,7 @@
 import SwiftUI
 
+/// Detailed view for displaying comprehensive information about a planet
+/// Features a parallax header image, fun facts, and detailed physical characteristics
 struct PlanetDetailView: View {
     let planet: PlanetData
     @Environment(\.dismiss) private var dismiss

@@ -1,21 +1,35 @@
 import Foundation
 import SwiftUI
 
+/// Represents the different pages available in the onboarding flow
+/// Each case corresponds to a specific onboarding screen
 enum OnboardingPage: Identifiable, CaseIterable {
+    /// Welcome screen introducing the app
     case welcome
+    /// Features overview screen
     case features
+    /// Final thank you screen
     case thanks
     
     var id: Self { self }
 }
 
+/// Represents an individual onboarding item with its associated content and styling
+/// Used to display feature highlights during the app's onboarding process
 struct OnboardingItem: Identifiable {
+    /// Unique identifier for the onboarding item
     let id = UUID()
+    /// Title of the feature or section
     let title: String
+    /// Detailed description of the feature
     let description: String
+    /// SF Symbol name for the feature's icon
     let systemImage: String
+    /// Theme color for the feature
     let tint: Color
     
+    /// Predefined features shown during onboarding
+    /// Each feature highlights a key aspect of the app
     static let features: [OnboardingItem] = [
         OnboardingItem(
             title: "Explore Your Home",
@@ -37,6 +51,7 @@ struct OnboardingItem: Identifiable {
         )
     ]
     
+    /// Credits and acknowledgments for data sources
     static let credits = """
     Special thanks to:
     • NASA APIs

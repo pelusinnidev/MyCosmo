@@ -1,13 +1,19 @@
 import SwiftUI
 
+/// A view that displays NASA's Astronomy Picture of the Day in detail
+/// Shows the image, title, date, and full explanation
 struct APODDetailView: View {
     @Environment(\.dismiss) private var dismiss
+    
+    /// The APOD data to display
     let apodData: APODResponse?
+    /// Any error that occurred while fetching the APOD
     let error: Error?
     
     var body: some View {
         NavigationStack {
             ScrollView {
+                // API Key Missing Error View
                 if let error = error as? APIError, error == .missingAPIKey {
                     VStack(spacing: 24) {
                         Image(systemName: "key.slash.fill")
@@ -36,8 +42,11 @@ struct APODDetailView: View {
                     }
                     .frame(maxHeight: .infinity)
                     .padding()
-                } else if let apodData = apodData {
+                } 
+                // APOD Content View
+                else if let apodData = apodData {
                     VStack(alignment: .leading, spacing: 16) {
+                        // Astronomy Image
                         AsyncImage(url: URL(string: apodData.url)) { phase in
                             switch phase {
                             case .empty:
@@ -53,6 +62,7 @@ struct APODDetailView: View {
                             }
                         }
                         
+                        // Image Information
                         Text(apodData.title)
                             .font(.title)
                             .bold()

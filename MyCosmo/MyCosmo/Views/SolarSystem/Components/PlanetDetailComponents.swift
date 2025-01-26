@@ -1,5 +1,7 @@
 import SwiftUI
 
+/// Section displaying quick facts about a planet
+/// Shows number of moons, average temperature, and radius in a grid layout
 struct QuickFactsSection: View {
     let planet: PlanetData
     @Environment(\.colorScheme) private var colorScheme
@@ -37,6 +39,8 @@ struct QuickFactsSection: View {
     }
 }
 
+/// Individual fact view with icon, value, and label
+/// Used in the QuickFactsSection to display planet statistics
 struct QuickFactView: View {
     let icon: String
     let value: String
@@ -62,6 +66,8 @@ struct QuickFactView: View {
     }
 }
 
+/// Card displaying random fun facts about a planet
+/// Features an animated refresh button to cycle through facts
 struct FunFactCard: View {
     @Binding var currentFact: String
     let planet: PlanetData
@@ -100,6 +106,8 @@ struct FunFactCard: View {
     }
 }
 
+/// Card view for displaying grouped information
+/// Used to organize related planet data with a title and custom content
 struct InfoCard<Content: View>: View {
     let title: String
     @ViewBuilder let content: () -> Content
@@ -123,6 +131,8 @@ struct InfoCard<Content: View>: View {
     }
 }
 
+/// Row view for displaying a key-value pair
+/// Used within InfoCard to show planet characteristics
 struct InfoRow: View {
     let title: String
     let value: String

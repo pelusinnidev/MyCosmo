@@ -2,11 +2,15 @@ import SwiftUI
 import SwiftData
 import PhotosUI
 
+/// Main view for displaying and managing astronomical observations
+/// Features filtering capabilities and a list of user observations
 struct ObservationsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var colorScheme
     @Query private var observations: [UserObservation]
     @StateObject private var viewModel: ObservationsViewModel
+    
+    // Filter states
     @State private var selectedCategory: ObservationCategory?
     @State private var selectedImportance: ImportanceLevel?
     @State private var selectedPlanet: Planet?
@@ -18,6 +22,7 @@ struct ObservationsView: View {
         _viewModel = StateObject(wrappedValue: ObservationsViewModel(modelContext: context))
     }
     
+    /// Filters observations based on selected criteria
     var filteredObservations: [UserObservation] {
         observations.filter { observation in
             let categoryMatch = selectedCategory == nil || observation.category == selectedCategory
@@ -48,6 +53,7 @@ struct ObservationsView: View {
             }
             .navigationTitle("Observations")
             .toolbar {
+                // Info Button
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
                         showingInfo = true
@@ -56,12 +62,14 @@ struct ObservationsView: View {
                     }
                 }
                 
+                // Add Button
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: { viewModel.showingAddSheet = true }) {
                         Label("Add Observation", systemImage: "plus.circle.fill")
                     }
                 }
                 
+                // Filter Menu
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         // Clear Filters
@@ -166,16 +174,19 @@ struct ObservationsView: View {
         }
     }
     
+    /// Indicates whether any filters are currently active
     private var hasActiveFilters: Bool {
         selectedCategory != nil || selectedImportance != nil || selectedPlanet != nil
     }
     
+    /// Clears all active filters
     private func clearFilters() {
         selectedCategory = nil
         selectedImportance = nil
         selectedPlanet = nil
     }
     
+    /// Toggles the selected category filter
     private func toggleCategory(_ category: ObservationCategory) {
         if selectedCategory == category {
             selectedCategory = nil
@@ -184,6 +195,7 @@ struct ObservationsView: View {
         }
     }
     
+    /// Toggles the selected importance filter
     private func toggleImportance(_ importance: ImportanceLevel) {
         if selectedImportance == importance {
             selectedImportance = nil
@@ -192,6 +204,7 @@ struct ObservationsView: View {
         }
     }
     
+    /// Toggles the selected planet filter
     private func togglePlanet(_ planet: Planet) {
         if selectedPlanet == planet {
             selectedPlanet = nil
@@ -201,13 +214,14 @@ struct ObservationsView: View {
     }
 }
 
+/// Row view for displaying an observation in the list
 struct ObservationRowView: View {
     let observation: UserObservation
     @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
         HStack(spacing: 12) {
-            // Thumbnail Image
+            // Thumbnail image
             observation.displayImage
                 .resizable()
                 .scaledToFill()
@@ -219,7 +233,7 @@ struct ObservationRowView: View {
                 )
             
             VStack(alignment: .leading, spacing: 4) {
-                // Title and Planet
+                // Title and planet
                 HStack {
                     Text(observation.title)
                         .font(.headline)
@@ -232,7 +246,7 @@ struct ObservationRowView: View {
                         .foregroundColor(.secondary)
                 }
                 
-                // Description
+                // Description preview
                 if !observation.observationDescription.isEmpty {
                     Text(observation.observationDescription)
                         .font(.subheadline)
@@ -240,9 +254,8 @@ struct ObservationRowView: View {
                         .lineLimit(1)
                 }
                 
-                // Tags
+                // Category and importance tags
                 HStack(spacing: 4) {
-                    // Category Tag
                     Text(observation.category.rawValue)
                         .font(.caption)
                         .padding(.horizontal, 8)
@@ -251,7 +264,6 @@ struct ObservationRowView: View {
                         .foregroundColor(.blue)
                         .clipShape(Capsule())
                     
-                    // Importance Tag
                     Text(observation.importance.rawValue)
                         .font(.caption)
                         .padding(.horizontal, 8)

@@ -1,46 +1,43 @@
 import SwiftUI
 
+/// Main settings view for the application
+/// Provides user configuration options and app information
 struct SettingsView: View {
+    // App preferences
     @AppStorage("appearanceMode") private var appearanceMode = 0 // 0: system, 1: light, 2: dark
     @AppStorage("selectedLanguage") private var selectedLanguage = "English"
     @AppStorage("nasaApiKey") private var nasaApiKey = ""
+    
+    // View state
     @State private var remainingRequests: Int?
     @State private var showingNASASettings = false
     @State private var isEditingAPIKey = false
     
+    // Constants
     private let appearanceModes = ["System", "Light", "Dark"]
     private let languages = ["English", "Español", "Català"]
+    
+    /// Returns the color scheme based on the selected appearance mode
+    private var colorScheme: ColorScheme? {
+        switch appearanceMode {
+        case 1: return .light
+        case 2: return .dark
+        default: return nil
+        }
+    }
+    
+    /// Checks the remaining API requests for the NASA APOD API
+    private func checkRemainingRequests() async {
+        let service = APODService()
+        remainingRequests = await service.getRemainingAPIRequests()
+    }
     
     var body: some View {
         NavigationStack {
             List {
-                /*
-                    // Profile Section
-                    Section {
-                        HStack(spacing: 16) {
-                            Circle()
-                                .fill(Color.accentColor.gradient)
-                                .frame(width: 60, height: 60)
-                                .overlay {
-                                    Image(systemName: "person.crop.circle.fill")
-                                        .font(.system(size: 60))
-                                        .foregroundStyle(.ultraThinMaterial)
-                                }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("MyCosmo")
-                                    .font(.headline)
-                                Text("Your Personal Space Explorer")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        .padding(.vertical, 6)
-                    }
-                */
-                
                 // Appearance Section
                 Section {
+                    // Theme picker
                     HStack {
                         Label {
                             Text("Theme")
@@ -87,6 +84,7 @@ struct SettingsView: View {
                 
                 // API Settings Section
                 Section {
+                    // NASA APOD API settings
                     Button {
                         showingNASASettings = true
                     } label: {
@@ -111,6 +109,7 @@ struct SettingsView: View {
                             
                             Spacer()
                             
+                            // API status indicator
                             HStack(spacing: 4) {
                                 if nasaApiKey.isEmpty {
                                     Image(systemName: "exclamationmark.circle.fill")
@@ -129,6 +128,7 @@ struct SettingsView: View {
                         }
                     }
                     
+                    // Space News API status
                     Label {
                         HStack {
                             Text("Space News API")
@@ -196,6 +196,7 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            // NASA API settings sheet
             .sheet(isPresented: $showingNASASettings) {
                 NavigationStack {
                     List {
@@ -247,6 +248,7 @@ struct SettingsView: View {
                 }
                 .presentationDetents([.medium])
             }
+            // API key editing sheet
             .sheet(isPresented: $isEditingAPIKey) {
                 NavigationStack {
                     Form {
@@ -279,19 +281,6 @@ struct SettingsView: View {
         }
         .task {
             await checkRemainingRequests()
-        }
-    }
-    
-    private func checkRemainingRequests() async {
-        let service = APODService()
-        remainingRequests = await service.getRemainingAPIRequests()
-    }
-    
-    private var colorScheme: ColorScheme? {
-        switch appearanceMode {
-        case 1: return .light
-        case 2: return .dark
-        default: return nil
         }
     }
 }
