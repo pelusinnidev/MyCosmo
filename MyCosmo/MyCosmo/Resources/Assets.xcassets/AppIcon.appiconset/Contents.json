@@ -1,7 +1,31 @@
 {
   "images" : [
     {
+      "filename" : "MyCosmoLogo 1.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "MyCosmoLogo.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "tinted"
+        }
+      ],
+      "filename" : "globe_book_1000dp_E8EAED_FILL0_wght400_GRAD0_opsz48.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
