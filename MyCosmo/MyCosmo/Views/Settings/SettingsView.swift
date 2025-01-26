@@ -17,34 +17,24 @@ struct SettingsView: View {
     private let appearanceModes = ["System", "Light", "Dark"]
     private let languages = ["English", "Español", "Català"]
     
+    /// Returns the color scheme based on the selected appearance mode
+    private var colorScheme: ColorScheme? {
+        switch appearanceMode {
+        case 1: return .light
+        case 2: return .dark
+        default: return nil
+        }
+    }
+    
+    /// Checks the remaining API requests for the NASA APOD API
+    private func checkRemainingRequests() async {
+        let service = APODService()
+        remainingRequests = await service.getRemainingAPIRequests()
+    }
+    
     var body: some View {
         NavigationStack {
             List {
-                /*
-                    // Profile Section
-                    Section {
-                        HStack(spacing: 16) {
-                            Circle()
-                                .fill(Color.accentColor.gradient)
-                                .frame(width: 60, height: 60)
-                                .overlay {
-                                    Image(systemName: "person.crop.circle.fill")
-                                        .font(.system(size: 60))
-                                        .foregroundStyle(.ultraThinMaterial)
-                                }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("MyCosmo")
-                                    .font(.headline)
-                                Text("Your Personal Space Explorer")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        .padding(.vertical, 6)
-                    }
-                */
-                
                 // Appearance Section
                 Section {
                     // Theme picker
@@ -242,7 +232,6 @@ struct SettingsView: View {
                                 }
                             }
                         }
-                        }
                     }
                     .navigationTitle("NASA APOD API")
                     .navigationBarTitleDisplayMode(.inline)
@@ -292,21 +281,6 @@ struct SettingsView: View {
         }
         .task {
             await checkRemainingRequests()
-        }
-    }
-    
-    /// Checks the remaining API requests for the NASA APOD API
-    private func checkRemainingRequests() async {
-        let service = APODService()
-        remainingRequests = await service.getRemainingAPIRequests()
-    }
-    
-    /// Returns the color scheme based on the selected appearance mode
-    private var colorScheme: ColorScheme? {
-        switch appearanceMode {
-        case 1: return .light
-        case 2: return .dark
-        default: return nil
         }
     }
 }
