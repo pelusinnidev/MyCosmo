@@ -10,9 +10,22 @@
 		7190E6B32CFE59DF00813B42 /* MyCosmo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCosmo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		718AA54E2D46F3E800E070D6 /* Exceptions for "MyCosmo" folder in "MyCosmo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7190E6B22CFE59DF00813B42 /* MyCosmo */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7190E6B52CFE59DF00813B42 /* MyCosmo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				718AA54E2D46F3E800E070D6 /* Exceptions for "MyCosmo" folder in "MyCosmo" target */,
+			);
 			path = MyCosmo;
 			sourceTree = "<group>";
 		};
@@ -256,6 +269,7 @@
 				DEVELOPMENT_TEAM = KN5Z22KYT7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyCosmo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MyCosmo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -294,6 +308,7 @@
 				DEVELOPMENT_TEAM = KN5Z22KYT7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyCosmo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MyCosmo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
