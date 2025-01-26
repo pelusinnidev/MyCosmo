@@ -1,10 +1,10 @@
-![Screenshot 2025-01-13 at 13 25 54](https://github.com/user-attachments/assets/0ba134bb-f24c-41ad-a614-992859b16ce4)
+<img width="1608" alt="Screenshot 2025-01-26 at 15 56 41" src="https://github.com/user-attachments/assets/817f3ce8-a3b5-4de5-91de-d71c32b64df8" />
 
 # MyCosmo 🌌
 
 > Be your universe.
 
-MyCosmo is a comprehensive iOS application that brings the wonders of space exploration and astronomy right to your fingertips. Developed as part of the DAM2 - M08 course at La Salle Gràcia by Pol Hernàndez & Adrià Sanchez.
+MyCosmo is a comprehensive iOS application that brings the wonders of space exploration and astronomy right to your fingertips.
 
 ## ✨ Features
 
@@ -42,7 +42,7 @@ MyCosmo is a comprehensive iOS application that brings the wonders of space expl
 ## 🚀 Getting Started
 
 ### Requirements
-- iOS 17.0+
+- iOS 18.0+
 - Xcode 15.0+
 - Swift 5.9+
 
@@ -51,16 +51,16 @@ MyCosmo is a comprehensive iOS application that brings the wonders of space expl
 2. Open `MyCosmo.xcodeproj` in Xcode
 3. Build and run the project
 
-## 👥 Contributors
-- Pol Hernàndez
-- Adrià Sanchez
-
-## 🏫 Academic Context
-This project was developed as part of the DAM2 - M08 course at La Salle Gràcia, showcasing the implementation of modern iOS development practices and real-world API integrations.
-
 ## 📄 License
-This project is protected under copyright law. All rights reserved.
+This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
 
----
+This means you are free to:
+- Share — copy and redistribute the material in any medium or format
+- Adapt — remix, transform, and build upon the material
 
-Made with ❤️ in Barcelona 
+Under the following terms:
+- Attribution — You must give appropriate credit
+- NonCommercial — You may not use the material for commercial purposes
+- ShareAlike — If you remix, transform, or build upon the material, you must distribute your contributions under the same license
+
+For more information, visit: https://creativecommons.org/licenses/by-nc-sa/4.0/
