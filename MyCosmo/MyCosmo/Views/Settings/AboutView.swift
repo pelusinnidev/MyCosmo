@@ -1,16 +1,21 @@
 import SwiftUI
 
+/// View displaying information about the app
+/// Includes app description, technologies used, and project background
 struct AboutView: View {
     var body: some View {
         List {
+            // App header section
             Section {
                 HStack {
+                    // App icon
                     Image("AppIconResource")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 60, height: 60)
                         .cornerRadius(12)
                     
+                    // App title and tagline
                     VStack(alignment: .leading, spacing: 4) {
                         Text("MyCosmo")
                             .font(.headline)
@@ -23,6 +28,7 @@ struct AboutView: View {
                 .padding(.vertical, 4)
             }
             
+            // Project description section
             Section("About") {
                 Text("MyCosmo started as a simple class project, but as we invested more time and effort, we discovered its potential and the passion we could bring to it. While there are many astronomy apps available, our vision is different. We've made this project open source on GitHub, allowing others to see how it's built and hopefully inspire them to create their own apps. While future developments might lead to a closed version, our current intention is to keep it open and accessible to the community. We hope you enjoy using MyCosmo as much as we enjoyed creating it.")
                     .font(.subheadline)
@@ -30,6 +36,7 @@ struct AboutView: View {
                     .padding(.vertical, 4)
             }
             
+            // Technologies section
             Section("Technologies") {
                 InfoSheetRow(symbol: "swift",
                            title: "Swift & SwiftUI",

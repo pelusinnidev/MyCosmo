@@ -1,8 +1,11 @@
 import SwiftUI
 
+/// View displaying acknowledgments for APIs, documentation, and design resources
+/// Used to credit external services and tools that helped build the app
 struct AcknowledgmentsView: View {
     var body: some View {
         List {
+            // External APIs section
             Section("APIs") {
                 InfoSheetRow(symbol: "network",
                            title: "NASA APOD",
@@ -13,6 +16,7 @@ struct AcknowledgmentsView: View {
                            description: "Latest space news and articles")
             }
             
+            // Documentation resources section
             Section("Documentation") {
                 InfoSheetRow(symbol: "apple.logo",
                            title: "Apple Developer",
@@ -23,6 +27,7 @@ struct AcknowledgmentsView: View {
                            description: "Swift language resources")
             }
             
+            // Design resources section
             Section("Design") {
                 InfoSheetRow(symbol: "paintpalette.fill",
                            title: "SF Symbols",

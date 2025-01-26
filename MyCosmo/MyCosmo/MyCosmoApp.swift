@@ -30,7 +30,7 @@ struct MyCosmoApp: App {
                 MainTabView()
                     .preferredColorScheme(colorScheme)
             }
-        }
+        }   
         .modelContainer(container)
     }
     

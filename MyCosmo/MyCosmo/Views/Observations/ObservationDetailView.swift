@@ -1,5 +1,7 @@
 import SwiftUI
 
+/// Detailed view for a single astronomical observation
+/// Displays images, metadata, and description with a modern card-based layout
 struct ObservationDetailView: View {
     @StateObject private var viewModel: ObservationDetailViewModel
     @Environment(\.colorScheme) var colorScheme
@@ -18,13 +20,13 @@ struct ObservationDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // Images Section with Paging
+                // Image gallery with paging
                 TabView(selection: $selectedImageIndex) {
-                    // Main Image
+                    // Main observation image
                     ImageCard(image: viewModel.observation.displayImage)
                         .tag(0)
                     
-                    // Additional Images
+                    // Additional observation images
                     if let additionalImages = viewModel.observation.additionalImages {
                         ForEach(Array(additionalImages.enumerated()), id: \.element) { index, imageData in
                             if let uiImage = UIImage(data: imageData) {
@@ -39,14 +41,14 @@ struct ObservationDetailView: View {
                 .indexViewStyle(.page(backgroundDisplayMode: .always))
                 
                 VStack(alignment: .leading, spacing: 24) {
-                    // Title Section
+                    // Observation title
                     Text(viewModel.observation.title)
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                         .padding(.horizontal, 16)
                     
-                    // Tags Grid
+                    // Metadata tags grid
                     LazyVGrid(columns: columns, spacing: 12) {
                         SpaceTag(icon: "globe", text: viewModel.observation.displayPlanet, color: .purple)
                             .frame(maxWidth: .infinity)
@@ -59,7 +61,7 @@ struct ObservationDetailView: View {
                     }
                     .padding(.horizontal, 16)
                     
-                    // Description Section
+                    // Observation description
                     VStack(alignment: .leading, spacing: 12) {
                         Label("Description", systemImage: "text.alignleft")
                             .font(.headline)
@@ -108,6 +110,8 @@ struct ObservationDetailView: View {
     }
 }
 
+/// Card view for displaying observation images
+/// Features a gradient overlay for visual appeal
 struct ImageCard: View {
     let image: Image
     @Environment(\.colorScheme) private var colorScheme
@@ -135,6 +139,8 @@ struct ImageCard: View {
     }
 }
 
+/// Tag view for displaying observation metadata
+/// Features an icon and text with custom styling
 struct SpaceTag: View {
     let icon: String
     let text: String

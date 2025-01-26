@@ -1,14 +1,24 @@
 import Foundation
 import SwiftUI
 
+/// Represents a single article from the Space News API
+/// Contains information about space-related news articles, blogs, and reports
 struct SpaceNewsArticle: Codable, Identifiable {
+    /// Unique identifier for the article
     let id: Int
+    /// Article headline
     let title: String
+    /// URL to the full article
     let url: String
+    /// URL of the article's featured image
     let imageUrl: String
+    /// Source website of the article
     let newsSite: String
+    /// Brief overview of the article content
     let summary: String
+    /// Original publication date
     let publishedAt: String
+    /// Last update date
     let updatedAt: String
     
     enum CodingKeys: String, CodingKey {
@@ -20,13 +30,21 @@ struct SpaceNewsArticle: Codable, Identifiable {
     }
 }
 
+/// Represents different categories of space-related content
+/// Used for filtering and organizing news content in the app
 enum NewsType: String, CaseIterable {
+    /// Shows all types of content
     case all = "All"
+    /// News articles only
     case articles = "Articles"
+    /// Blog posts only
     case blogs = "Blogs"
+    /// Official reports only
     case reports = "Reports"
+    /// Space launch information
     case launches = "Launches"
     
+    /// SF Symbol icon associated with each news type
     var icon: String {
         switch self {
         case .all: return "square.grid.2x2.fill"
@@ -37,6 +55,7 @@ enum NewsType: String, CaseIterable {
         }
     }
     
+    /// Theme color for each news type
     var color: Color {
         switch self {
         case .all: return .indigo
@@ -47,6 +66,7 @@ enum NewsType: String, CaseIterable {
         }
     }
     
+    /// API endpoint for each news type
     var endpoint: String {
         switch self {
         case .all: return "articles"

@@ -1,21 +1,25 @@
 import SwiftUI
 
+/// First screen of the onboarding experience
+/// Displays the app icon, name, and welcome message with animated entrance
 struct WelcomeView: View {
+    /// Closure to trigger navigation to the next page
     let nextPage: () -> Void
+    /// Controls the animation state of view elements
     @State private var isAnimated = false
     
     var body: some View {
         VStack(spacing: 40) {
             Spacer()
             
-            // App Icon
+            // App icon with fade-in animation
             Image("AppIconResource")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 180, height: 180)
                 .opacity(isAnimated ? 1 : 0)
             
-            // Title and Subtitle
+            // App title and tagline with slide-up animation
             VStack(spacing: 16) {
                 Text("MyCosmo")
                     .font(.system(size: 44, weight: .bold, design: .rounded))
@@ -31,7 +35,7 @@ struct WelcomeView: View {
             
             Spacer()
             
-            // Button
+            // Continue button with fade-in animation
             Button(action: nextPage) {
                 Text("Begin Your Journey")
                     .font(.headline)
