@@ -1,6 +1,6 @@
-<img width="1608" alt="Screenshot 2025-01-26 at 15 56 41" src="https://github.com/user-attachments/assets/817f3ce8-a3b5-4de5-91de-d71c32b64df8" />
+<img width="697" alt="Screenshot 2025-01-27 at 19 02 22" src="https://github.com/user-attachments/assets/519d1d16-bc05-44f6-8d46-8c1788f9a7fd" />
 
-# MyCosmo 🌌
+# MyCosmo
 
 > Be your universe.
 
@@ -32,6 +32,8 @@ MyCosmo is a comprehensive iOS application that brings the wonders of space expl
 - Reactive UI updates using SwiftUI's state management
 - Efficient data persistence with Swift Data
 - Modular components for reusability and maintainability
+
+<img width="1608" alt="Screenshot 2025-01-26 at 15 56 41" src="https://github.com/user-attachments/assets/817f3ce8-a3b5-4de5-91de-d71c32b64df8" />
 
 ## 📱 Key Components
 - **News Module**: Browse and read the latest space-related news
