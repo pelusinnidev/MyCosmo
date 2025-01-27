@@ -1,4 +1,4 @@
-<img width="697" alt="Screenshot 2025-01-27 at 19 02 22" src="https://github.com/user-attachments/assets/519d1d16-bc05-44f6-8d46-8c1788f9a7fd" />
+<img width="1608" alt="Screenshot 2025-01-27 at 19 02 22" src="https://github.com/user-attachments/assets/519d1d16-bc05-44f6-8d46-8c1788f9a7fd" />
 
 # MyCosmo
 
